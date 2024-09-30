@@ -1,40 +1,69 @@
 package com.example.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.dto.ClienteDTO;
-import com.example.entity.Persona;
+import com.example.entity.Cliente;
+import com.example.entity.Usuario;
+import com.example.exceptions.UsuarioNoEncontradoException;
 import com.example.repository.ClienteRepository;
+import com.example.repository.UsuarioRepository;
 
 @Service
 public class ClienteService {
-
+	
 	@Autowired
 	ClienteRepository clienteRepository;
+	@Autowired
+	UsuarioRepository usuarioRepository;
 	
-	public List<Persona> getAllClients() {
-		List<Persona> lista_clientes = clienteRepository.findAllClients();
-		return lista_clientes;
-	}
 	
-	public void saveClient(ClienteDTO clienteDTO) {
-		String password = encodePassword(clienteDTO.getPassword());
-		Persona newCliente = new Persona(clienteDTO.getNombre(), 
-												clienteDTO.getEmail(), 
-												clienteDTO.getTelefono(), 
-												clienteDTO.getDireccion(), 
-												password,
-												2);
-		newCliente.setEstado(1);
+	public void crearCliente(ClienteDTO clienteDTO) {
+		Cliente newCliente = convertirDTOAEntity(clienteDTO);
 		clienteRepository.save(newCliente);
 	}
 	
-	public String encodePassword(String password) {
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		return encoder.encode(password);
+	public List<ClienteDTO> obtenerTotalClientes(){
+		List<Cliente> clientes =  clienteRepository.findAll();
+		return convertirEntityADTO(clientes);
+	}
+	
+	public Cliente convertirDTOAEntity(ClienteDTO clienteDto) {
+		Usuario usuario = usuarioRepository.findById(clienteDto.getIdUsuario())
+				.orElseThrow(()->new UsuarioNoEncontradoException("No se encontró el usuario con el ID: "+clienteDto.getIdUsuario()));
+
+		Cliente newCliente = new Cliente();
+		newCliente.setUsuario(usuario);
+		newCliente.setDni(clienteDto.getDni());
+		newCliente.setNombre(clienteDto.getNombre());
+		newCliente.setApellido(clienteDto.getApellido());
+		newCliente.setTelefono(clienteDto.getTelefono());
+		newCliente.setDireccion(clienteDto.getDireccion());
+		newCliente.setEstado(1);
+		
+		return newCliente;
+	}
+	
+	public List<ClienteDTO> convertirEntityADTO(List<Cliente> clientes) {
+		List<ClienteDTO> clienteDTOs = new ArrayList<>();
+		
+		
+		for (Cliente cliente : clientes) {
+			ClienteDTO clienteDTO = new ClienteDTO(cliente.getUsuario().getIdUsuario(), 
+										cliente.getDni(), 
+										cliente.getNombre(), 
+										cliente.getApellido(), 
+										cliente.getTelefono(), 
+										cliente.getDireccion(),
+										cliente.getEstado());
+											
+			clienteDTOs.add(clienteDTO);
+		}
+		
+		return clienteDTOs;
 	}
 }
