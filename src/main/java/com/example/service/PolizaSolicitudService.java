@@ -37,10 +37,9 @@ public class PolizaSolicitudService {
 	
 	@Transactional
 	public List<PolizaSolicitudDTO> obtenerTotalSolicitudPoliza() {
-		System.out.println("Hola mundo2");
+		
 		List<PolizaSolicitud> totalPolizaSolicitud = polizaSolicitudRepository.findAll();
-		System.out.println("Hola mundo22");
-		System.out.println(totalPolizaSolicitud);
+		
 		return convertirEntityADTO(totalPolizaSolicitud);
 	
 	}

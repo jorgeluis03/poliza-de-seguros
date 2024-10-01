@@ -20,4 +20,9 @@ public class HandlerExceptionController {
 	public ResponseEntity<?> clienteNoEncontradoException(Exception e) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<?> IllegalArgumentException(Exception e) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+	}
 }
