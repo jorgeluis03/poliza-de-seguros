@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.dto.UsuarioDTO;
 import com.example.entity.Usuario;
@@ -17,6 +18,7 @@ public class UsuarioService {
 	@Autowired
 	UsuarioRepository usuarioRepository;
 	
+	@Transactional
 	public void crearUsuario(Usuario usuario) {
 		String contrasenaHash = encoderContrasena(usuario.getContrasena());
 		usuario.setContrasena(contrasenaHash);
@@ -24,6 +26,7 @@ public class UsuarioService {
 		usuarioRepository.save(usuario);
 	}
 	
+	@Transactional
 	public List<UsuarioDTO> obtenerUsuarios(){
 		List<Usuario> usuarios = usuarioRepository.findAll();
 		return convertirUsuariosADTOs(usuarios);
@@ -32,7 +35,11 @@ public class UsuarioService {
 	public List<UsuarioDTO> convertirUsuariosADTOs(List<Usuario> usuarios){
 		List<UsuarioDTO> usuarioDTOs = new ArrayList<UsuarioDTO>();
 		for (Usuario usuario : usuarios) {
-			UsuarioDTO newUsuarioDTO = new UsuarioDTO(usuario.getIdUsuario(), usuario.getNombreUsuario(), usuario.getCorreo(), usuario.getEstado());
+			UsuarioDTO newUsuarioDTO = new UsuarioDTO(
+											usuario.getIdUsuario(), 
+											usuario.getNombreUsuario(), 
+											usuario.getCorreo(), 
+											usuario.getEstado());
 			usuarioDTOs.add(newUsuarioDTO);
 		}
 		return usuarioDTOs;

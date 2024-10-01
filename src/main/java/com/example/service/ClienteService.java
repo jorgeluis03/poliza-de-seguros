@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.dto.ClienteDTO;
 import com.example.entity.Cliente;
@@ -21,12 +22,13 @@ public class ClienteService {
 	@Autowired
 	UsuarioRepository usuarioRepository;
 	
-	
+	@Transactional
 	public void crearCliente(ClienteDTO clienteDTO) {
 		Cliente newCliente = convertirDTOAEntity(clienteDTO);
 		clienteRepository.save(newCliente);
 	}
 	
+	@Transactional
 	public List<ClienteDTO> obtenerTotalClientes(){
 		List<Cliente> clientes =  clienteRepository.findAll();
 		return convertirEntityADTO(clientes);
@@ -53,14 +55,14 @@ public class ClienteService {
 		
 		
 		for (Cliente cliente : clientes) {
-			ClienteDTO clienteDTO = new ClienteDTO(cliente.getUsuario().getIdUsuario(), 
+			ClienteDTO clienteDTO = new ClienteDTO(
+										cliente.getUsuario().getIdUsuario(), 
 										cliente.getDni(), 
 										cliente.getNombre(), 
 										cliente.getApellido(), 
 										cliente.getTelefono(), 
 										cliente.getDireccion(),
-										cliente.getEstado());
-											
+										cliente.getEstado());								
 			clienteDTOs.add(clienteDTO);
 		}
 		
