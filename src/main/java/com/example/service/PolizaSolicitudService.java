@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,11 +38,11 @@ public class PolizaSolicitudService {
 	}
 	
 	@Transactional
-	public List<PolizaSolicitudDTO> obtenerTotalSolicitudPoliza() {
+	public Page<PolizaSolicitudDTO> obtenerTotalSolicitudPoliza(Pageable pageable) {
 		
-		List<PolizaSolicitud> totalPolizaSolicitud = polizaSolicitudRepository.findAll();
+		Page<PolizaSolicitud> listaPage = polizaSolicitudRepository.findAll(pageable);
 		
-		return convertirEntityADTO(totalPolizaSolicitud);
+		return convertirEntityADTO(listaPage);
 	
 	}
 	
@@ -58,24 +60,19 @@ public class PolizaSolicitudService {
 		return pSolicitud;
 	}
 	
-	public List<PolizaSolicitudDTO> convertirEntityADTO(List<PolizaSolicitud> totalPolizaSolicitud) {
-		System.out.println("Hola mundo 1");
-		List<PolizaSolicitudDTO> listaDtos = new ArrayList<PolizaSolicitudDTO>();
-		
-		for (PolizaSolicitud polizaSolicitud : totalPolizaSolicitud) {
-			
-			PolizaSolicitudDTO solicitudDTO = new PolizaSolicitudDTO();
-			solicitudDTO.setFechaSolicitud(String.valueOf(polizaSolicitud.getFechaSolicitud()));
-			solicitudDTO.setIdCliente(polizaSolicitud.getCliente().getIdCliente());
-			solicitudDTO.setIdTipoPoliza(polizaSolicitud.getIdTipoPoliza());
-			solicitudDTO.setDetalles(polizaSolicitud.getDetalles());
-			solicitudDTO.setEstado(polizaSolicitud.getEstado());
-			solicitudDTO.setIdPolizaSolicitud(polizaSolicitud.getIdSolicitud());
-			
-			listaDtos.add(solicitudDTO);
-		}
-		
-		return listaDtos;
+	public Page<PolizaSolicitudDTO> convertirEntityADTO(Page<PolizaSolicitud> listaPage) {
+	    return listaPage.map(polizaSolicitud -> 
+	        new PolizaSolicitudDTO(
+	            polizaSolicitud.getIdSolicitud(),
+	            polizaSolicitud.getCliente().getIdCliente(),
+	            polizaSolicitud.getIdTipoPoliza(),
+	            String.valueOf(polizaSolicitud.getFechaSolicitud()),  
+	            polizaSolicitud.getDetalles(),
+	            polizaSolicitud.getEstado()
+	        )
+	    );
 	}
+
+
 	
 }

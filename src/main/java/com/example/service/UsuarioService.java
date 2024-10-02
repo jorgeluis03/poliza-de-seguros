@@ -1,9 +1,7 @@
 package com.example.service;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,22 +25,21 @@ public class UsuarioService {
 	}
 	
 	@Transactional
-	public List<UsuarioDTO> obtenerUsuarios(){
-		List<Usuario> usuarios = usuarioRepository.findAll();
-		return convertirUsuariosADTOs(usuarios);
+	public Page<UsuarioDTO> obtenerUsuarios(Pageable pageable){
+		
+		Page<Usuario> listaUsuarios = usuarioRepository.findAll(pageable);
+		
+		return convertirUsuariosADTOs(listaUsuarios);
+		
 	}
 	
-	public List<UsuarioDTO> convertirUsuariosADTOs(List<Usuario> usuarios){
-		List<UsuarioDTO> usuarioDTOs = new ArrayList<UsuarioDTO>();
-		for (Usuario usuario : usuarios) {
-			UsuarioDTO newUsuarioDTO = new UsuarioDTO(
-											usuario.getIdUsuario(), 
-											usuario.getNombreUsuario(), 
-											usuario.getCorreo(), 
-											usuario.getEstado());
-			usuarioDTOs.add(newUsuarioDTO);
-		}
-		return usuarioDTOs;
+	public Page<UsuarioDTO> convertirUsuariosADTOs(Page<Usuario> listaUsuarios){
+		
+		return listaUsuarios.map(usuario -> 
+        new UsuarioDTO(usuario.getIdUsuario(), 
+                       usuario.getNombreUsuario(), 
+                       usuario.getCorreo(), 
+                       usuario.getEstado()));
 	}
 	
 	public String encoderContrasena(String contrasena) {

@@ -18,6 +18,18 @@ public class PolizaSolicitudDTO {
 		this.detalles = detalles;
 	}
 	
+	
+	
+	public PolizaSolicitudDTO(int idPolizaSolicitud, int idCliente, int idTipoPoliza, String fechaSolicitud,
+			String detalles, EstadoSolicitud estado) {
+		this.idPolizaSolicitud = idPolizaSolicitud;
+		this.idCliente = idCliente;
+		this.idTipoPoliza = idTipoPoliza;
+		this.fechaSolicitud = fechaSolicitud;
+		this.detalles = detalles;
+		this.estado = estado;
+	}
+
 	public int getIdPolizaSolicitud() {
 		return idPolizaSolicitud;
 	}

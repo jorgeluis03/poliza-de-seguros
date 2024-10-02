@@ -1,9 +1,7 @@
 package com.example.service;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,9 +27,11 @@ public class ClienteService {
 	}
 	
 	@Transactional
-	public List<ClienteDTO> obtenerTotalClientes(){
-		List<Cliente> clientes =  clienteRepository.findAll();
-		return convertirEntityADTO(clientes);
+	public Page<ClienteDTO> obtenerTotalClientes(Pageable pageable){
+		
+		Page<Cliente> listaPage = clienteRepository.findAll(pageable);
+		
+		return convertirEntityADTO(listaPage);
 	}
 	
 	public Cliente convertirDTOAEntity(ClienteDTO clienteDto) {
@@ -50,22 +50,16 @@ public class ClienteService {
 		return newCliente;
 	}
 	
-	public List<ClienteDTO> convertirEntityADTO(List<Cliente> clientes) {
-		List<ClienteDTO> clienteDTOs = new ArrayList<>();
-		
-		
-		for (Cliente cliente : clientes) {
-			ClienteDTO clienteDTO = new ClienteDTO(
-										cliente.getUsuario().getIdUsuario(), 
-										cliente.getDni(), 
-										cliente.getNombre(), 
-										cliente.getApellido(), 
-										cliente.getTelefono(), 
-										cliente.getDireccion(),
-										cliente.getEstado());								
-			clienteDTOs.add(clienteDTO);
-		}
-		
-		return clienteDTOs;
+	public Page<ClienteDTO> convertirEntityADTO(Page<Cliente> listaPage) {
+		return listaPage.map(cliente ->
+				new ClienteDTO(
+					cliente.getUsuario().getIdUsuario(), 
+					cliente.getDni(), 
+					cliente.getNombre(), 
+					cliente.getApellido(), 
+					cliente.getTelefono(), 
+					cliente.getDireccion(),
+					cliente.getEstado())	
+				);
 	}
 }

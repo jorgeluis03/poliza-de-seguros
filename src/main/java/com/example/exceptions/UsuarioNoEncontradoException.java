@@ -7,4 +7,6 @@ public class UsuarioNoEncontradoException extends RuntimeException{
 		// TODO Auto-generated constructor stub
 	}
 
+	
+
 }
