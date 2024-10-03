@@ -8,7 +8,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "auto")
 public class Auto {
@@ -21,59 +26,19 @@ public class Auto {
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
 	
+	@NotBlank(message = "{campo.requerido}")
 	private String marca;
-	private String modelo;
-	private int anio;
-	private double valor;
 	
-	public Auto() {}
-
-	public Integer getIdAuto() {
-		return idAuto;
-	}
-
-	public void setIdAuto(Integer idAuto) {
-		this.idAuto = idAuto;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-
-	public String getMarca() {
-		return marca;
-	}
-
-	public void setMarca(String marca) {
-		this.marca = marca;
-	}
-
-	public String getModelo() {
-		return modelo;
-	}
-
-	public void setModelo(String modelo) {
-		this.modelo = modelo;
-	}
-
-	public int getAnio() {
-		return anio;
-	}
-
-	public void setAnio(int anio) {
-		this.anio = anio;
-	}
-
-	public double getValor() {
-		return valor;
-	}
-
-	public void setValor(double valor) {
-		this.valor = valor;
-	}
+	@NotBlank(message = "{campo.requerido}")
+	private String modelo;
+	
+	@NotNull(message = "{campo.requerido}")
+	@Positive(message = "Debe ingresar un numero positivo")
+	private Integer anio;
+	
+	@NotNull(message = "{campo.requerido}")
+	@Positive(message = "{valor.invalido}")
+	private Double valor;
+	
 	
 }

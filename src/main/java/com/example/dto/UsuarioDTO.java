@@ -1,5 +1,8 @@
 package com.example.dto;
 
+import lombok.Data;
+
+@Data
 public class UsuarioDTO {
 	private int id;
 	private String nomUsuario;
@@ -12,32 +15,4 @@ public class UsuarioDTO {
 		this.correo = correo;
 		this.estado = estado;
 	}
-	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getNomUsuario() {
-		return nomUsuario;
-	}
-	public void setNomUsuario(String nomUsuario) {
-		this.nomUsuario = nomUsuario;
-	}
-	public String getCorreo() {
-		return correo;
-	}
-	public void setCorreo(String correo) {
-		this.correo = correo;
-	}
-	public int getEstado() {
-		return estado;
-	}
-	public void setEstado(int estado) {
-		this.estado = estado;
-	}
-	
-	
-	
 }

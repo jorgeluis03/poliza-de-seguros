@@ -27,7 +27,9 @@ public class PolizaService {
 	
 	@Transactional
 	public Map<String, Object> modificarSolicitudPoliza(int id, String estado) {
+		
 	    Map<String, Object> responseMap = new HashMap<>();
+	    
 	    try {
 	        PolizaSolicitud polizaSolicitud = polizaSolicitudRepository.findById(id)
 	                .orElseThrow(() -> new IllegalArgumentException("Solicitud no encontrada: " + id));
@@ -36,6 +38,8 @@ public class PolizaService {
 	        	
 	            polizaSolicitud.setEstado(EstadoSolicitud.APROBADO);
 	            polizaSolicitudRepository.save(polizaSolicitud);
+	            
+	            // Se aplica el patron Strategy para realizar el guardado en las respectivas tablas en la bd segun el tipo de poliza
 	            PolizaStrategy strategy = polizaStrategyFactory.getStrategy(polizaSolicitud.getIdTipoPoliza());
 	            strategy.crearPoliza(polizaSolicitud);
 	            

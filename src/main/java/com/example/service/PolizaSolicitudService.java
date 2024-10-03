@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.dto.PolizaSolicitudDTO;
+import com.example.entity.Auto;
 import com.example.entity.Cliente;
 import com.example.entity.PolizaSolicitud;
+import com.example.enume.EstadoSolicitud;
 import com.example.exceptions.ClienteNoEncontradoException;
 import com.example.repository.ClienteRepository;
 import com.example.repository.PolizaSolicitudRepository;
@@ -55,7 +57,8 @@ public class PolizaSolicitudService {
 		pSolicitud.setCliente(cliente);
 		pSolicitud.setIdTipoPoliza(pSolicitudDTO.getIdTipoPoliza());
 		pSolicitud.setDetalles(pSolicitudDTO.getDetalles());
-		pSolicitud.setFechaSolicitud(Date.valueOf(LocalDate.now()));
+		pSolicitud.setFechaSolicitud(LocalDate.now());
+		pSolicitud.setEstado(EstadoSolicitud.PENDIENTE);
 		
 		return pSolicitud;
 	}
@@ -71,8 +74,7 @@ public class PolizaSolicitudService {
 	            polizaSolicitud.getEstado()
 	        )
 	    );
+	  
 	}
-
-
 	
 }

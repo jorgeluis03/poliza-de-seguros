@@ -8,7 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "clientes")
 public class Cliente {
@@ -22,92 +28,30 @@ public class Cliente {
     @JoinColumn(name = "id_usuario", unique = true)
     private Usuario usuario;
 
+    @NotBlank(message = "{campo.requerido}")
+    @Size(min = 8, max = 8, message = "El DNI debe tener exactamente 8 digitos")
     @Column(nullable = false, unique = true)
     private String dni;
 
+    @NotBlank(message = "{campo.requerido}")
     @Column(nullable = false)
     private String nombre;
 
+    @NotBlank(message = "Este campo es requerido")
     @Column(nullable = false)
     private String apellido;
 
+    @NotBlank(message = "{campo.requerido}")
+    @Size(min = 9, message = "El telefono debe tener minimo 9 digitos")
     @Column(nullable = false)
     private String telefono;
-
+    
+    @NotBlank(message = "{campo.requerido}")
     @Column(nullable = false)
     private String direccion;
     
-    @Column(nullable = false)
-    private int estado;
-    
-	public Cliente() {}
-
-	public Integer getIdCliente() {
-		return idCliente;
-	}
-
-	public void setIdCliente(Integer idCliente) {
-		this.idCliente = idCliente;
-	}
-
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
-
-	public String getDni() {
-		return dni;
-	}
-
-	public void setDni(String dni) {
-		this.dni = dni;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getApellido() {
-		return apellido;
-	}
-
-	public void setApellido(String apellido) {
-		this.apellido = apellido;
-	}
-
-	public String getTelefono() {
-		return telefono;
-	}
-
-	public void setTelefono(String telefono) {
-		this.telefono = telefono;
-	}
-
-	public String getDireccion() {
-		return direccion;
-	}
-
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
-	}
-
-	public int getEstado() {
-		return estado;
-	}
-
-	public void setEstado(int estado) {
-		this.estado = estado;
-	}
-    
-    
-    
+    @Column
+    private Integer estado;
     
 }
     

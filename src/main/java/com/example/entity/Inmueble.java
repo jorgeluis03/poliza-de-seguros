@@ -8,7 +8,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.Data;
+@Data
 @Entity
 @Table(name = "inmuebles")
 public class Inmueble {
@@ -21,55 +25,16 @@ public class Inmueble {
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
 	
+	@NotBlank(message = "{campo.requerido}")
 	private String direccion;
 	
+	@NotBlank(message = "{campo.requerido}")
 	@Column(name = "tipo_inmueble")
 	private String tipoInmueble;
 	
-	private double valor;
-	
-	public Inmueble () {}
+	@NotNull(message = "{campo.requerido}")
+	@Positive(message = "{valor.invalido}")
+	private Double valor;
 
-	public Integer getIdInmueble() {
-		return idInmueble;
-	}
-
-	public void setIdInmueble(Integer idInmueble) {
-		this.idInmueble = idInmueble;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-
-	public String getDireccion() {
-		return direccion;
-	}
-
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
-	}
-
-	public String getTipoInmueble() {
-		return tipoInmueble;
-	}
-
-	public void setTipoInmueble(String tipoInmueble) {
-		this.tipoInmueble = tipoInmueble;
-	}
-
-	public double getValor() {
-		return valor;
-	}
-
-	public void setValor(double valor) {
-		this.valor = valor;
-	}
-	
-	
 	
 }
