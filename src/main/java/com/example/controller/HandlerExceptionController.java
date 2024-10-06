@@ -16,7 +16,7 @@ public class HandlerExceptionController {
 	@ExceptionHandler(UsuarioNoEncontradoException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ResponseEntity<String> usuarioNoEncontradoException(Exception e) {
-		return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
 	
 	@ExceptionHandler(ClienteNoEncontradoException.class)
