@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,11 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.dto.UsuarioDTO;
 import com.example.entity.Usuario;
+import com.example.exceptions.RolNoEncontradoException;
 import com.example.exceptions.UsuarioNoEncontradoException;
 import com.example.service.UsuarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -102,7 +105,17 @@ public class UsuarioController {
 			@ApiResponse(responseCode = "200",description = "Operación exitosa: Detalles del usuario obtenidos",
 					content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioDTO.class))}),
 			@ApiResponse(responseCode = "404", description = "Usuario no encontrado: El ID de usuario no existe",
-					content = @Content),
+					content = {@Content(mediaType = "application/json", 
+										schema = @Schema(implementation = ErrorResponse.class),
+										examples = {@ExampleObject(value = """
+									                                        {
+								                                            "status": 404,
+								                                            "error": "Not Found",
+								                                            "message": "El usuario con el ID 123 no existe"
+								                                        	}
+								                                        """)}
+										)
+								}),
 		    @ApiResponse(responseCode = "400", description = "Error en la solicitud: Parámetros inválidos o mal formateados",
 		    		content = @Content)
 	})
@@ -115,15 +128,47 @@ public class UsuarioController {
 	
 	
 	
+	@Operation(summary = "Actualizar un usuario")
+	@ApiResponses(value = {
+			@ApiResponse(	responseCode = "200",description = "Operación exitosa: Información del usuario actualizados",
+							content = {@Content(mediaType = "application/json", schema = @Schema(example = "{\"nomUsuario\": \"miguel123\", "
+																											+ "\"correo\": \"miguel@example.com\", \"nombre\": \"Miguel\", \"apellido\": \"Pérez\", "
+																											+ "\"dni\": \"12345678\", \"telefono\": \"654321123\", \"direccion\": \"Calle Falsa 123\", "
+																											+ "\"idRol\": 0}"))}),
+			@ApiResponse(responseCode = "404", description = "Usuario no encontrado: El ID de usuario no existe",
+					content = {@Content(mediaType = "application/json", 
+										schema = @Schema(implementation = ErrorResponse.class),
+										examples = {@ExampleObject(value = """
+									                                        {
+								                                            "status": 404,
+								                                            "error": "Not Found",
+								                                            "message": "El usuario con el ID 123 no existe"
+								                                        	}
+								                                        """)}
+										)
+								}),
+		    @ApiResponse(responseCode = "400", description = "Error en la solicitud: Parámetros inválidos o mal formateados",
+		    		content = @Content)
+	})
 	@PutMapping("/{id}") //Actualizar un usuario
-	public ResponseEntity<?> editarUsuarioPorId(@PathVariable int id, Usuario usuario){
-		usuarioService.editarUsuarioPorId(id, usuario);
-		return ResponseEntity.ok("");
+	public ResponseEntity<?> editarUsuarioPorId(
+			@io.swagger.v3.oas.annotations.parameters.RequestBody(
+					description = "Cuerpo de la solicitud para editar un usuario",
+			        required = true,
+			        content = @Content(	mediaType = "application/json",
+	        	            			schema = @Schema(example = "{\"nomUsuario\": \"miguel123\", \"correo\": \"miguel@example.com\", \"nombre\": \"Miguel\", \"apellido\": \"Pérez\", \"dni\": \"12345678\", \"telefono\": \"654321123\", \"direccion\": \"Calle Falsa 123\", \"idRol\": 0}")
+			        					)
+					)
+			
+			@PathVariable int id, @RequestBody UsuarioDTO usuarioDTO) throws UsuarioNoEncontradoException, RolNoEncontradoException{
+		Map<String, Object> response = usuarioService.editarUsuarioPorId(id, usuarioDTO);
+		return ResponseEntity.ok(response); 
 	}
 	
 	@DeleteMapping("/{id}") //Eliminar un usuario
-	public ResponseEntity<?> eliminarUsuarioPorId(@PathVariable int id){
-		return ResponseEntity.ok("");
+	public ResponseEntity<?> eliminarUsuarioPorId(@PathVariable int id) throws UsuarioNoEncontradoException{
+		usuarioService.eliminarUsuario(id);
+		return ResponseEntity.noContent().build();
 	}
 	
 }

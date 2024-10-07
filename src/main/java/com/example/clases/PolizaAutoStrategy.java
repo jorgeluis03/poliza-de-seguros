@@ -33,12 +33,12 @@ public class PolizaAutoStrategy implements PolizaStrategy, NumeroPoliza{
 			
 			ObjectMapper objectMapper = new ObjectMapper();
 			Auto auto = objectMapper.readValue(detallesAutoJSON, Auto.class);
-			auto.setCliente(polizaSolicitud.getCliente());
+			//auto.setCliente(polizaSolicitud.getCliente());
 			autoRepository.save(auto);
 			
 			
 			PolizaAuto newPolizaAuto = new PolizaAuto();
-			newPolizaAuto.setCliente(polizaSolicitud.getCliente());
+			//newPolizaAuto.setCliente(polizaSolicitud.getCliente());
 			newPolizaAuto.setAuto(auto);
 			newPolizaAuto.setNumeroPoliza(generatePolicyNumber(TipoPoliza.AUTO));
 			polizaAutoRepository.save(newPolizaAuto);

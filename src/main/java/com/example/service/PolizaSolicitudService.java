@@ -40,13 +40,7 @@ public class PolizaSolicitudService {
 	}
 	
 	@Transactional
-	public Page<PolizaSolicitudDTO> obtenerTotalSolicitudPoliza(Pageable pageable) {
-		
-		Page<PolizaSolicitud> listaPage = polizaSolicitudRepository.findAll(pageable);
-		
-		return convertirEntityADTO(listaPage);
 	
-	}
 	
 	public PolizaSolicitud convertirDTOAEntity(PolizaSolicitudDTO pSolicitudDTO) {
 		
@@ -54,7 +48,7 @@ public class PolizaSolicitudService {
 							.orElseThrow(()-> new ClienteNoEncontradoException("No se encontró el cliente con ID: "+pSolicitudDTO.getIdCliente()));
 		
 		PolizaSolicitud pSolicitud = new PolizaSolicitud();
-		pSolicitud.setCliente(cliente);
+		//pSolicitud.setCliente(cliente);
 		pSolicitud.setIdTipoPoliza(pSolicitudDTO.getIdTipoPoliza());
 		pSolicitud.setDetalles(pSolicitudDTO.getDetalles());
 		pSolicitud.setFechaSolicitud(LocalDate.now());
@@ -63,18 +57,6 @@ public class PolizaSolicitudService {
 		return pSolicitud;
 	}
 	
-	public Page<PolizaSolicitudDTO> convertirEntityADTO(Page<PolizaSolicitud> listaPage) {
-	    return listaPage.map(polizaSolicitud -> 
-	        new PolizaSolicitudDTO(
-	            polizaSolicitud.getIdSolicitud(),
-	            polizaSolicitud.getCliente().getIdCliente(),
-	            polizaSolicitud.getIdTipoPoliza(),
-	            String.valueOf(polizaSolicitud.getFechaSolicitud()),  
-	            polizaSolicitud.getDetalles(),
-	            polizaSolicitud.getEstado()
-	        )
-	    );
-	  
-	}
+
 	
 }

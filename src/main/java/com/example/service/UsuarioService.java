@@ -11,8 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.dto.UsuarioDTO;
+import com.example.entity.Rol;
 import com.example.entity.Usuario;
+import com.example.exceptions.RolNoEncontradoException;
 import com.example.exceptions.UsuarioNoEncontradoException;
+import com.example.repository.RolRepository;
 import com.example.repository.UsuarioRepository;
 
 @Service
@@ -20,6 +23,9 @@ public class UsuarioService {
 	
 	@Autowired
 	UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	RolRepository rolRepository;
 	
 	@Transactional
 	public Map<String, Object> crearUsuario(Usuario usuario) {
@@ -48,43 +54,56 @@ public class UsuarioService {
 	
 	@Transactional
 	public UsuarioDTO obtenerUsuarioPorId(int id) {
-		Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
-		
-		if(optionalUsuario.isPresent()) {
-			Usuario usuario = optionalUsuario.get();
-			return convertirEntityADTO(usuario);
-		}else {
-			throw new UsuarioNoEncontradoException("No se encontró el usuario con ID: "+id);
-		}
+		Usuario usuario = usuarioRepository.findById(id)
+							.orElseThrow(() -> new UsuarioNoEncontradoException("No se encontró el usuario con ID: "+id));
+		return convertirEntityADTO(usuario);
 	}
 	
 	
 	@Transactional
-	public Map<String, Object> editarUsuarioPorId(int id, Usuario usuario){
-		Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
-		Map<String, Object>  responseMap = new HashMap<>();
+	public Map<String, Object> editarUsuarioPorId(int id, UsuarioDTO usuarioDTO){
 		
-		if(optionalUsuario.isPresent()) {
-			
-			usuarioRepository.save(usuario);
-			
-			responseMap.put("id", usuario.getIdUsuario());
-			responseMap.put("mensaje", "Usuario editado exitosamente");
-			
-			return responseMap;
-			
-		}else {
-			throw new UsuarioNoEncontradoException("No se encontró el usuario con ID: "+id);
-		}
+		Map<String, Object> responseMap = new HashMap<String, Object>();
+		
+		Usuario usuario = usuarioRepository.findById(id)
+	            			.orElseThrow(() -> new UsuarioNoEncontradoException("No se encontró el usuario con ID: " + id));
+
+        Rol rol = rolRepository.findById(usuarioDTO.getIdRol())
+        			.orElseThrow(() -> new RolNoEncontradoException("No se encontró el rol con el ID: " + usuarioDTO.getIdRol()));
+
+        usuario.setNombreUsuario(usuarioDTO.getNombreUsuario());
+		usuario.setCorreo(usuarioDTO.getCorreo());
+		usuario.setNombre(usuarioDTO.getNombre());
+		usuario.setApellido(usuarioDTO.getApellido());
+		usuario.setDni(usuarioDTO.getDni());
+		usuario.setTelefono(usuarioDTO.getTelefono());
+		usuario.setDireccion(usuarioDTO.getDireccion());
+		usuario.setRol(rol);
+
+        usuarioRepository.save(usuario);
+        
+        responseMap.put("id",usuario.getIdUsuario());
+        responseMap.put("mensaje", "Usuario editado correctamente");
+        
+        return responseMap;
 	}
 	
+	@Transactional
+	public void eliminarUsuario(int id) {
+		Usuario usuario = usuarioRepository.findById(id)
+	            .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado con ID: " + id));
+	    
+	    usuarioRepository.delete(usuario);
+	}
 	
 	public UsuarioDTO convertirEntityADTO(Usuario usuario){
 		UsuarioDTO usuarioDTO = new UsuarioDTO();
 		usuarioDTO.setIdUsuario(usuario.getIdUsuario());
-		usuarioDTO.setNomUsuario(usuario.getNombreUsuario());
+		usuarioDTO.setNombreUsuario(usuario.getNombreUsuario());
 		usuarioDTO.setCorreo(usuario.getCorreo());
-		
+		usuarioDTO.setNombre(usuario.getNombre());
+		usuarioDTO.setApellido(usuario.getApellido());
+
 		return usuarioDTO;
 	}
 	

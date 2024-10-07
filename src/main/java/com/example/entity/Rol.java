@@ -2,6 +2,7 @@ package com.example.entity;
 
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ public class Rol {
 	@Column(name = "nombre_rol")
 	private String nombreRol;
 	
-	@OneToMany
+	@OneToMany(mappedBy = "rol", cascade = CascadeType.ALL)
 	private Set<Usuario> usuarios;
 	
 }

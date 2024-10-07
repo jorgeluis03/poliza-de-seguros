@@ -34,12 +34,12 @@ public class PolizaInmuebleStrategy implements PolizaStrategy, NumeroPoliza{
 			
 			//guardar en la tabla Inmuble
 			Inmueble inmueble = objectMapper.readValue(detallesAutoJSON, Inmueble.class);
-			inmueble.setCliente(polizaSolicitud.getCliente());
+			//inmueble.setCliente(polizaSolicitud.getCliente());
 			inmuebleRepository.save(inmueble);
 			
 			//Guardar en la tabla PolizaInmueble
 			PolizaInmueble polizaInmueble = new PolizaInmueble();
-			polizaInmueble.setCliente(polizaSolicitud.getCliente());
+			//polizaInmueble.setCliente(polizaSolicitud.getCliente());
 			polizaInmueble.setInmueble(inmueble);
 			polizaInmueble.setNumeroPoliza(generatePolicyNumber(TipoPoliza.INMUEBLE));
 			

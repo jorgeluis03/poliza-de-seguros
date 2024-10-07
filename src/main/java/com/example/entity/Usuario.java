@@ -1,5 +1,8 @@
 package com.example.entity;
 
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,11 +11,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 @Data
@@ -25,17 +28,17 @@ public class Usuario {
     private Integer idUsuario;
 
 	@NotBlank(message = "{campo.requerido}")
-    @Column(name = "nom_usuario", nullable = false, unique = true)
+    @Column(name = "nom_usuario", unique = true)
     private String nombreUsuario;
     
     @NotBlank(message = "{campo.requerido}")
     @Size(min = 5, message = "{campo.size.contrasena}")
-    @Column(nullable = false)
+    @Column(name = "contrasena")
     private String contrasena;
     
     @NotBlank(message = "{campo.requerido}")
     @Email(message = "{campo.email}")
-    @Column(nullable = false, unique = true) 
+    @Column(unique = true) 
     private String correo;
     
     private String nombre;
@@ -47,8 +50,11 @@ public class Usuario {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_rol")
     private Rol rol;
-    
+
     private Integer estado;
+    
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PolizaSolicitud> polizaSolicitudes;
     
     
 }

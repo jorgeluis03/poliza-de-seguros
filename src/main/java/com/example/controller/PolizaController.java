@@ -136,7 +136,7 @@ public class PolizaController {
 			content = @Content)
 	})
 	@GetMapping("/solicitud")
-	public ResponseEntity<Page<PolizaSolicitudDTO>> obtenerSolicitudPolizas(
+	public ResponseEntity<?> obtenerSolicitudPolizas(
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size
 			){
@@ -144,9 +144,9 @@ public class PolizaController {
 		Pageable pageable = PageRequest.of(page, size, Sort.by("idSolicitud"));
 		
 		
-		 Page<PolizaSolicitudDTO> obtenerTotalSolicitudPoliza = polizaSolicitudService.obtenerTotalSolicitudPoliza(pageable);
+		 //Page<PolizaSolicitudDTO> obtenerTotalSolicitudPoliza = polizaSolicitudService.obtenerTotalSolicitudPoliza(pageable);
 		
-		return ResponseEntity.ok(obtenerTotalSolicitudPoliza);
+		return ResponseEntity.ok("");
 	}
 	
 	

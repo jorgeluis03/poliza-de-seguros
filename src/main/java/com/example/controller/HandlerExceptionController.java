@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.exceptions.ClienteNoEncontradoException;
+import com.example.exceptions.RolNoEncontradoException;
 import com.example.exceptions.SolicitudPolizaNoEncontradoException;
 import com.example.exceptions.UsuarioNoEncontradoException;
 @RestControllerAdvice
@@ -16,6 +17,12 @@ public class HandlerExceptionController {
 	@ExceptionHandler(UsuarioNoEncontradoException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ResponseEntity<String> usuarioNoEncontradoException(Exception e) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+	}
+	
+	@ExceptionHandler(RolNoEncontradoException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<String> rolNoEncontradoException(Exception e) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
 	
@@ -36,4 +43,5 @@ public class HandlerExceptionController {
 	public ResponseEntity<?> solicitudPolizaNoEncontradoException(Exception e) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
+	
 }
