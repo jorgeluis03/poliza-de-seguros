@@ -1,6 +1,7 @@
 package com.example.entity;
 import java.time.LocalDate;
 import com.example.enume.EstadoSolicitud;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

@@ -1,8 +1,4 @@
 package com.example.entity;
-
-import java.time.LocalDate;
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,11 +8,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
 import lombok.Data;
 @Data
 @Entity
@@ -27,29 +18,24 @@ public class PolizaAuto {
 	@Column(name = "id_poliza_auto", nullable = false)
     private Integer idPolizaAuto;
 
-	@ManyToOne
-	@JoinColumn(name = "id_cliente")
-    private Cliente cliente;
+	@OneToOne
+	@JoinColumn(name = "id_poliza")
+    private  Poliza poliza;
 
-    @OneToOne
-    @JoinColumn(name = "id_auto")
-    private Auto auto;
+    @Column(name = "marca", length = 50)
+    private String marca;
 
-    @Column(name = "numero_poliza", length = 50, nullable = false)
-    private String numeroPoliza;
+    @Column(name = "modelo", length = 50)
+    private String modelo;
+    
+    @Column(name = "anio")
+    private Integer anio;
+    
+    @Column(name = "valor")
+    private Double valor;
 
-    @Column(name = "fecha_inicio",nullable = true)
-    private LocalDate fechaInicio;
-
-    @Column(name = "fecha_fin", nullable = true)
-    private LocalDate fechaFin;
-
-	@Positive(message = "{campo.invalido}")
-    @Column(name = "monto_asegurado")
-    private Double montoAsegurado;
-
-    @Column(name = "estado")
-    private Integer estado;
+    @Column(name = "numero_placa", length = 50)
+    private String numeroPlaca;
 	
  
     

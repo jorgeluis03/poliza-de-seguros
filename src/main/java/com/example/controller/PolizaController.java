@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.dto.PolizaSolicitudDTO;
 import com.example.exceptions.ClienteNoEncontradoException;
 import com.example.exceptions.SolicitudPolizaNoEncontradoException;
-import com.example.service.PolizaService;
+import com.example.exceptions.UsuarioNoEncontradoException;
 import com.example.service.PolizaSolicitudService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,8 +37,7 @@ public class PolizaController {
 	
 	@Autowired
 	PolizaSolicitudService polizaSolicitudService;
-	@Autowired
-	PolizaService polizaService;
+	
 	
 	//Pólizas
 	
@@ -115,14 +116,12 @@ public class PolizaController {
 	// ===================================================================================
 	
 	@PostMapping("/solicitud")
-	public ResponseEntity<?> crearPolizaSolicitud(@RequestBody PolizaSolicitudDTO polizaSolicitudDTO) throws ClienteNoEncontradoException{
+	public ResponseEntity<?> crearPolizaSolicitud(@RequestBody PolizaSolicitudDTO polizaSolicitudDTO) throws UsuarioNoEncontradoException, JsonProcessingException{
 		
-		int idPolizaSolicitud = polizaSolicitudService.crearSolicitudPoliza(polizaSolicitudDTO);
+		HashMap<String, Object> response = polizaSolicitudService.crearSolicitudPoliza(polizaSolicitudDTO);
 		
-		Map<String, Integer> responseBody = new HashMap<>();
-	    responseBody.put("id", idPolizaSolicitud);
-	    
-		return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+	 
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	
@@ -136,17 +135,14 @@ public class PolizaController {
 			content = @Content)
 	})
 	@GetMapping("/solicitud")
-	public ResponseEntity<?> obtenerSolicitudPolizas(
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size
-			){
+	public ResponseEntity<Page<PolizaSolicitudDTO>> obtenerSolicitudPolizas(@RequestParam(defaultValue = "0") int page,
+																			@RequestParam(defaultValue = "10") int size) throws JsonProcessingException{
 		
 		Pageable pageable = PageRequest.of(page, size, Sort.by("idSolicitud"));
 		
+		Page<PolizaSolicitudDTO> SolicitudPolizas = polizaSolicitudService.obtenerSolicitudPoliza(pageable);
 		
-		 //Page<PolizaSolicitudDTO> obtenerTotalSolicitudPoliza = polizaSolicitudService.obtenerTotalSolicitudPoliza(pageable);
-		
-		return ResponseEntity.ok("");
+		return ResponseEntity.ok(SolicitudPolizas);
 	}
 	
 	
@@ -177,9 +173,9 @@ public class PolizaController {
 		
 		String estado = requestBody.get("estado");
 		
-		Map<String, Object> responseMap = polizaService.modificarSolicitudPoliza(id, estado);
+		//Map<String, Object> responseMap = polizaService.modificarSolicitudPoliza(id, estado);
 		
-		return ResponseEntity.ok(responseMap);
+		return ResponseEntity.ok("");
 	}
 	
 }

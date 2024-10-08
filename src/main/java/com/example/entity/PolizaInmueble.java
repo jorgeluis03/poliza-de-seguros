@@ -1,18 +1,12 @@
 package com.example.entity;
-
-import java.time.LocalDate;
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Positive;
 import lombok.Data;
 @Data
 @Entity
@@ -21,30 +15,18 @@ public class PolizaInmueble {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_poliza_inmueble")
-	private Integer idPlizaInmueble;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_cliente")
-	private Cliente cliente;
+	private Integer idPolizaInmueble;
 	
 	@OneToOne
-	@JoinColumn(name = "id_inmueble")
-	private Inmueble inmueble;
+	@JoinColumn(name = "id_poliza")
+	private Poliza poliza;
 	
-	@Column(name = "numero_poliza")
-	private String numeroPoliza;
+	private String direccion;
 	
-	@Column(name = "fecha_inicio")
-	private LocalDate fechaInicio;
+	@Column(name = "tipo_inmueble")
+	private String tipoInmueble;
 	
-	@Column(name = "fecha_fin")
-	private LocalDate fechaFin;
+	private Double valor;
 	
-	@Positive(message = "{campo.invalido}")
-    @Column(name = "monto_asegurado")
-	private Double montoAsegurado;
-	
-	@Column(name = "estado")
-	private Integer estado;
 	
 }
