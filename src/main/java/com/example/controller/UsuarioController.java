@@ -25,6 +25,7 @@ import com.example.entity.Usuario;
 import com.example.exceptions.RolNoEncontradoException;
 import com.example.exceptions.UsuarioNoEncontradoException;
 import com.example.service.UsuarioService;
+import com.example.utils.ApiResult;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -66,15 +67,15 @@ public class UsuarioController {
 	        	            )
 		        		)
 					)
-			@Valid @RequestBody Usuario usuario, BindingResult bindingResult){
+			@Valid @RequestBody UsuarioDTO usuarioDto, BindingResult bindingResult){
 		
 		if(bindingResult.hasErrors()) {
 			return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
 		}
 		
-		Map<String, Object> crearUsuario = usuarioService.crearUsuario(usuario);
+		ApiResult<UsuarioDTO> apiResult = usuarioService.crearUsuario(usuarioDto);
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(crearUsuario);
+		return ResponseEntity.status(HttpStatus.CREATED).body(apiResult);
 	}
 	
 	
@@ -161,8 +162,8 @@ public class UsuarioController {
 					)
 			
 			@PathVariable int id, @RequestBody UsuarioDTO usuarioDTO) throws UsuarioNoEncontradoException, RolNoEncontradoException{
-		Map<String, Object> response = usuarioService.editarUsuarioPorId(id, usuarioDTO);
-		return ResponseEntity.ok(response); 
+		ApiResult<UsuarioDTO> apiResult = usuarioService.editarUsuarioPorId(id, usuarioDTO);
+		return ResponseEntity.ok(apiResult); 
 	}
 	
 	@DeleteMapping("/{id}") //Eliminar un usuario

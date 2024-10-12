@@ -46,4 +46,6 @@ public class Poliza {
 
     @Column(name = "estado")
     private Integer estado;
+    
+    // mappedy con polizaAutos y PolizaInmueble
 }

@@ -1,18 +1,23 @@
 package com.example.service;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.dto.PolizaSolicitudDTO;
+import com.example.dto.UsuarioDTO;
 import com.example.entity.PolizaSolicitud;
 import com.example.entity.Usuario;
 import com.example.enume.EstadoSolicitud;
+import com.example.exceptions.SolicitudPolizaNoEncontradoException;
 import com.example.exceptions.UsuarioNoEncontradoException;
 import com.example.repository.PolizaSolicitudRepository;
 import com.example.repository.UsuarioRepository;
+import com.example.utils.ApiResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,69 +32,72 @@ public class PolizaSolicitudService {
 	UsuarioRepository usuarioRepository;
 	
 	@Transactional
-	public HashMap<String, Object> crearSolicitudPoliza(PolizaSolicitudDTO polizaSolicitudDTO) throws JsonProcessingException {
-		
-		HashMap<String, Object> responseMap = new HashMap<String, Object>();
-		
-		Usuario usuario = usuarioRepository.findById(polizaSolicitudDTO.getIdUsuario())
-							.orElseThrow(() -> new UsuarioNoEncontradoException("No se encontro el usuario con el ID: "+polizaSolicitudDTO.getIdUsuario()));
-		
-		PolizaSolicitud pSolicitud = convertirDTOAEntity(polizaSolicitudDTO);
-		pSolicitud.setUsuario(usuario);
-		polizaSolicitudRepository.save(pSolicitud);
-		
-		
-		responseMap.put("id", pSolicitud.getIdSolicitud());
-		responseMap.put("mensaje", "Poliza solicitada correctamente");
-		
-		return responseMap;
+	public ApiResult<PolizaSolicitudDTO> crearSolicitudPoliza(PolizaSolicitudDTO polizaSolicitudDTO){
+	    Usuario usuario = usuarioRepository.findById(polizaSolicitudDTO.getIdUsuario())
+	        .orElseThrow(() -> new UsuarioNoEncontradoException("No se encontró el usuario con el ID: " + polizaSolicitudDTO.getIdUsuario()));
+
+	    PolizaSolicitud pSolicitud = convertirDTOAEntity(polizaSolicitudDTO);
+	    pSolicitud.setUsuario(usuario);
+	    polizaSolicitudRepository.save(pSolicitud);
+
+	    return new ApiResult<>("Póliza solicitada correctamente", convertirEntityADTO(pSolicitud));
+	}
+
 	
+	@Transactional(readOnly = true)
+	public Page<PolizaSolicitudDTO> obtenerSolicitudPoliza( Pageable pageable){
+		Page<PolizaSolicitud> polizasolicitudPage =  polizaSolicitudRepository.findAll(pageable);
+		
+		return polizasolicitudPage.map(this::convertirEntityADTO);
 	}
 	
 	@Transactional
-	public Page<PolizaSolicitudDTO> obtenerSolicitudPoliza( Pageable pageable) throws JsonProcessingException{
+	public ApiResult<PolizaSolicitudDTO> modificarSolicitudPoliza(int id, PolizaSolicitudDTO polizaSolicitudDTO){
+		PolizaSolicitud solicitud = polizaSolicitudRepository.findById(id)
+	            .orElseThrow(() -> new SolicitudPolizaNoEncontradoException("Solicitud con id " + id + " no encontrada"));
 		
-		Page<PolizaSolicitud> polizasolicitudPage =  polizaSolicitudRepository.findAll(pageable);
+		solicitud.setEstado(polizaSolicitudDTO.getEstado());
+		polizaSolicitudRepository.save(solicitud);
 		
-		return polizasolicitudPage.map((psolicitud) -> convertirEntityADTO(psolicitud));
+		return new ApiResult<>("Solicitud modificada", convertirEntityADTO(solicitud));
 	}
 	
-	
-	
-	public PolizaSolicitud convertirDTOAEntity(PolizaSolicitudDTO pSolicitudDTO) throws JsonProcessingException {
+	@Transactional(readOnly = true)
+	public ApiResult<PolizaSolicitudDTO> obtenerSolicitudPolizaPorId(int id){
+		PolizaSolicitud pSolicitud = polizaSolicitudRepository.findById(id)
+									.orElseThrow(() -> new SolicitudPolizaNoEncontradoException("No se enceontro la solicitud de póliza con el ID: "+id));
 		
-		ObjectMapper mapper = new ObjectMapper();
+		return new ApiResult<>("Solicitud encontrada", convertirEntityADTO(pSolicitud));
 		
-		PolizaSolicitud pSolicitud = new PolizaSolicitud();
-		pSolicitud.setIdTipoPoliza(pSolicitudDTO.getIdTipoPoliza());
-		pSolicitud.setDetalles(mapper.writeValueAsString(pSolicitudDTO.getDetalles()));
-		pSolicitud.setFechaSolicitud(LocalDate.now());
-		pSolicitud.setEstado(EstadoSolicitud.PENDIENTE);
-		
-		return pSolicitud;
 	}
+	
+	public PolizaSolicitud convertirDTOAEntity(PolizaSolicitudDTO pSolicitudDTO) {
+        PolizaSolicitud pSolicitud = new PolizaSolicitud();
+        pSolicitud.setIdTipoPoliza(pSolicitudDTO.getIdTipoPoliza());
+        pSolicitud.setFechaSolicitud(LocalDate.now());
+        pSolicitud.setEstado(EstadoSolicitud.PENDIENTE);
+        return pSolicitud;
+    }
 	
 	public PolizaSolicitudDTO convertirEntityADTO(PolizaSolicitud pSolicitud) {
-		
-		ObjectMapper mapper = new ObjectMapper();
-		
-		PolizaSolicitudDTO pSolicitudDTO = new PolizaSolicitudDTO();
-		pSolicitudDTO.setIdPolizaSolicitud(pSolicitud.getIdSolicitud());
-		pSolicitudDTO.setIdUsuario(pSolicitud.getUsuario().getIdUsuario());
-		pSolicitudDTO.setIdTipoPoliza(pSolicitud.getIdTipoPoliza());
-		pSolicitudDTO.setFechaSolicitud(pSolicitud.getFechaSolicitud());
-		pSolicitudDTO.setEstado(pSolicitud.getEstado());
-		
-		try {
-	        pSolicitudDTO.setDetalles(mapper.readTree(pSolicitud.getDetalles()));
-	    } catch (JsonProcessingException e) {
-	        throw new RuntimeException("Error al leer detalles del JSON", e);
-	    }
-	    
+	    PolizaSolicitudDTO pSolicitudDTO = new PolizaSolicitudDTO();
+
+	    UsuarioDTO usuarioDTO = new UsuarioDTO();
+	    usuarioDTO.setIdUsuario(pSolicitud.getUsuario().getIdUsuario());
+	    usuarioDTO.setCorreo(pSolicitud.getUsuario().getCorreo());
+	    usuarioDTO.setNombre(pSolicitud.getUsuario().getNombre());
+	    usuarioDTO.setApellido(pSolicitud.getUsuario().getApellido());
+	    usuarioDTO.setDni(pSolicitud.getUsuario().getDni());
+
+	    pSolicitudDTO.setIdPolizaSolicitud(pSolicitud.getIdSolicitud());
+	    pSolicitudDTO.setIdTipoPoliza(pSolicitud.getIdTipoPoliza());
+	    pSolicitudDTO.setFechaSolicitud(pSolicitud.getFechaSolicitud());
 	    pSolicitudDTO.setEstado(pSolicitud.getEstado());
-	    
+	    pSolicitudDTO.setUsuarioDTO(usuarioDTO);
+
 	    return pSolicitudDTO;
 	}
+
 
 	
 }

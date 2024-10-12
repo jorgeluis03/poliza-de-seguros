@@ -2,17 +2,19 @@ package com.example.dto;
 import java.time.LocalDate;
 
 import com.example.enume.EstadoSolicitud;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import lombok.Data;
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PolizaSolicitudDTO {
 	
-	private int idPolizaSolicitud;
-	private int idUsuario;
-    private int idTipoPoliza;
+	private Integer idPolizaSolicitud;
+	private Integer idUsuario;
+    private Integer idTipoPoliza;
     private LocalDate fechaSolicitud;
-    private JsonNode detalles;
     private EstadoSolicitud estado;
-  
+    private UsuarioDTO usuarioDTO;
+      
 }

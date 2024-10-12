@@ -39,9 +39,6 @@ public class PolizaSolicitud {
 	@Column(name = "fecha_solicitud")
 	private LocalDate fechaSolicitud;
 	
-	@Column(name = "detalles", columnDefinition = "json")
-	private String detalles;
-	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "estado", columnDefinition = "enum('Pendiente','Aprobado','Rechazado')")
 	private EstadoSolicitud estado;

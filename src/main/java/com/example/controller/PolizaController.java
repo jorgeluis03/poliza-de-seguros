@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.dto.PolizaSolicitudDTO;
-import com.example.exceptions.ClienteNoEncontradoException;
 import com.example.exceptions.SolicitudPolizaNoEncontradoException;
 import com.example.exceptions.UsuarioNoEncontradoException;
 import com.example.service.PolizaSolicitudService;
@@ -30,6 +29,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import com.example.utils.ApiResult;
 
 @RestController
 @RequestMapping("v1/api/polizas")
@@ -117,11 +117,8 @@ public class PolizaController {
 	
 	@PostMapping("/solicitud")
 	public ResponseEntity<?> crearPolizaSolicitud(@RequestBody PolizaSolicitudDTO polizaSolicitudDTO) throws UsuarioNoEncontradoException, JsonProcessingException{
-		
-		HashMap<String, Object> response = polizaSolicitudService.crearSolicitudPoliza(polizaSolicitudDTO);
-		
-	 
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+		 ApiResult<PolizaSolicitudDTO> apiResult = polizaSolicitudService.crearSolicitudPoliza(polizaSolicitudDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(apiResult);
 	}
 	
 	
@@ -135,15 +132,20 @@ public class PolizaController {
 			content = @Content)
 	})
 	@GetMapping("/solicitud")
-	public ResponseEntity<Page<PolizaSolicitudDTO>> obtenerSolicitudPolizas(@RequestParam(defaultValue = "0") int page,
-																			@RequestParam(defaultValue = "10") int size) throws JsonProcessingException{
-		
+	public ResponseEntity<?> obtenerSolicitudPolizas(@RequestParam(defaultValue = "0") int page,
+																			@RequestParam(defaultValue = "10") int size){
 		Pageable pageable = PageRequest.of(page, size, Sort.by("idSolicitud"));
-		
 		Page<PolizaSolicitudDTO> SolicitudPolizas = polizaSolicitudService.obtenerSolicitudPoliza(pageable);
 		
 		return ResponseEntity.ok(SolicitudPolizas);
 	}
+	
+	@GetMapping("/solicitud/{id}")
+	public ResponseEntity<?> obtenerSolicitudPolizasPorId(@PathVariable int id){
+		ApiResult<PolizaSolicitudDTO> apiResult= polizaSolicitudService.obtenerSolicitudPolizaPorId(id);
+		return ResponseEntity.ok(apiResult);
+	}
+	
 	
 	
 	@Operation(summary = "Modificar el estado de la solicitud de una determinada poliza")
@@ -169,13 +171,12 @@ public class PolizaController {
 	        	            )
 		        		)
 					)
-			@RequestBody Map<String, String> requestBody) throws IllegalArgumentException, SolicitudPolizaNoEncontradoException{
+			@RequestBody PolizaSolicitudDTO polizaSolicitudDTO) throws IllegalArgumentException, SolicitudPolizaNoEncontradoException{
 		
-		String estado = requestBody.get("estado");
-		
-		//Map<String, Object> responseMap = polizaService.modificarSolicitudPoliza(id, estado);
-		
-		return ResponseEntity.ok("");
+		ApiResult<?> apiResult = polizaSolicitudService.modificarSolicitudPoliza(id, polizaSolicitudDTO);
+		return ResponseEntity.ok(apiResult);
 	}
+	
+	
 	
 }
