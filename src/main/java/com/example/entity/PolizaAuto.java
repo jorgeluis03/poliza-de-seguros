@@ -15,7 +15,7 @@ import lombok.Data;
 public class PolizaAuto {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_poliza_auto", nullable = false)
+	@Column(name = "id_poliza_auto")
     private Integer idPolizaAuto;
 
 	@OneToOne
@@ -30,9 +30,6 @@ public class PolizaAuto {
     
     @Column(name = "anio")
     private Integer anio;
-    
-    @Column(name = "valor")
-    private Double valor;
 
     @Column(name = "numero_placa", length = 50)
     private String numeroPlaca;

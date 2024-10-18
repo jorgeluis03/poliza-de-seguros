@@ -1,8 +1,5 @@
 package com.example.service;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +15,6 @@ import com.example.exceptions.UsuarioNoEncontradoException;
 import com.example.repository.PolizaSolicitudRepository;
 import com.example.repository.UsuarioRepository;
 import com.example.utils.ApiResult;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class PolizaSolicitudService {

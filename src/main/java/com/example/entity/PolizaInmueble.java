@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 @Data
 @Entity
-@Table(name = "polizasinmuebles")
+@Table(name = "polizasinmueble")
 public class PolizaInmueble {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +25,5 @@ public class PolizaInmueble {
 	
 	@Column(name = "tipo_inmueble")
 	private String tipoInmueble;
-	
-	private Double valor;
-	
 	
 }

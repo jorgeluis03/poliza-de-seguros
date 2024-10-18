@@ -1,20 +1,23 @@
 package com.example.entity;
-
 import java.time.LocalDate;
-
+import com.example.enume.EstadoPoliza;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 @Data
 @Entity
-@Table(name = "")
+@Table(name = "polizas")
 public class Poliza {
 
 	@Id
@@ -26,11 +29,11 @@ public class Poliza {
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;
 	
-	@Column(name = "numero_poliza", length = 45)
+	@Column(name = "numero_poliza")
     private String numeroPoliza;
 	
-	@Column(name = "tipo_poliza", length = 50)
-    private String tipoPoliza;
+	@Column(name = "tipo_poliza")
+    private Integer tipoPoliza;
 	
 	private String detalles;
 	
@@ -44,8 +47,13 @@ public class Poliza {
     @Column(name = "monto_asegurado")
     private Double montoAsegurado;
 
-    @Column(name = "estado")
-    private Integer estado;
+	@Enumerated(EnumType.STRING)
+    @Column(name = "estado" )
+    private EstadoPoliza estado;
+    /*
+    @OneToOne(mappedBy = "poliza", cascade = CascadeType.ALL, orphanRemoval = true)
+    private PolizaInmueble polizaInmueble;
     
-    // mappedy con polizaAutos y PolizaInmueble
+    @OneToOne(mappedBy = "poliza", cascade = CascadeType.ALL, orphanRemoval = true)
+    private PolizaAuto polizaAuto;*/
 }

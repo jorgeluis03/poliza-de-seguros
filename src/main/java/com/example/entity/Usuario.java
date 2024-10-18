@@ -56,5 +56,8 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PolizaSolicitud> polizaSolicitudes;
     
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<Poliza> polizas;
+    
     
 }

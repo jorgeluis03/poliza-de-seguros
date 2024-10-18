@@ -1,6 +1,4 @@
 package com.example.controller;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,14 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.dto.UsuarioDTO;
-import com.example.entity.Usuario;
 import com.example.exceptions.RolNoEncontradoException;
 import com.example.exceptions.UsuarioNoEncontradoException;
 import com.example.service.UsuarioService;
 import com.example.utils.ApiResult;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
