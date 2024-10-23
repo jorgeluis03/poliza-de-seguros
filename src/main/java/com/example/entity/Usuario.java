@@ -1,7 +1,5 @@
 package com.example.entity;
-
 import java.util.Set;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,9 +13,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
 @Data
 @Entity
 @Table(name = "usuarios")
@@ -30,7 +28,7 @@ public class Usuario {
 	@NotBlank(message = "{campo.requerido}")
     @Column(name = "nom_usuario", unique = true)
     private String nombreUsuario;
-    
+
     @NotBlank(message = "{campo.requerido}")
     @Size(min = 5, message = "{campo.size.contrasena}")
     @Column(name = "contrasena")

@@ -26,27 +26,21 @@ import com.example.utils.ApiResult;
 
 @Service
 public class PolizaService {
-	
 	@Autowired
 	PolizaRepository polizaRepository;
-	
 	@Autowired
 	UsuarioRepository usuarioRepository;
-	
 	@Autowired
 	PolizaAutoRepository detallesAutoRepository;
-	
 	@Autowired
 	PolizaInmuebleRepository polizaInmuebleRepository;
-	
 	
 	@Transactional
 	public ApiResult<?> crearPoliza(PolizaDTO polizaDTO){
 		
 		Usuario usuario = usuarioRepository.findById(polizaDTO.getIdUsuario())
 							.orElseThrow(() -> new UsuarioNoEncontradoException("No se encontró el usuario con ID: "+polizaDTO.getIdUsuario()));
-		
-		
+
 		Poliza poliza = convertirDtoAEntidad(polizaDTO);
 		poliza.setUsuario(usuario);
 		poliza.setNumeroPoliza(generarNumeroPoliza());
