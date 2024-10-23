@@ -68,6 +68,17 @@ public class JwtUtils { // 1: CLASE PARA CREAR, VALIDAR Y OBTENER INFORMACION DE
                 .getSubject(); // Devolver el "subject" del token, que es el nombre de usuario
     }
 
+    // Metodo para obtener el rol (Authority) a partir de un token jwt
+    public String getRoleFromJwtToken(String token) {
+        return Jwts.parser() // Crear un parser para analizar el token
+                .verifyWith(getSigningKey()) // Verificar el token con la clave secreta
+                .build()
+                .parseSignedClaims(token) // Parsear y obtener los claims firmados del token
+                .getPayload() // Obtener la carga útil (payload)
+                .get("role", String.class); // Devolver el "role" del token, que es el rol del usuario
+    }
+
+
     //Metodo para validar si un token JWT es correcto
     public boolean validateJwtToken(String authToken) {
         try {
@@ -87,7 +98,6 @@ public class JwtUtils { // 1: CLASE PARA CREAR, VALIDAR Y OBTENER INFORMACION DE
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e.getMessage());
         }
-
         return false;
     }
 }

@@ -23,7 +23,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity // Habilita la seguridad a nivel de metodo con anotaciones como @PreAuthorize, etc.
+@EnableMethodSecurity
 public class SecurityConfiguration {
     //PENULTIMO: SE CONFIGURA LA SEGURIDAD PARA GESTIONAR LA AUTENTICACION Y AUTORIZACIÓN
 
@@ -73,17 +73,18 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) //dehabilita la proteccion csrf ya que no es necesaria en una api rest
-                .cors(AbstractHttpConfigurer::disable) //deshabilita el manejo de CORS (se puede personalizar)
-                //Configura la autorizacion de solicitudes Http
+                .csrf(AbstractHttpConfigurer::disable) // Deshabilita CSRF para una API REST
+                .cors(AbstractHttpConfigurer::disable) // Deshabilita CORS (puedes personalizarlo)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers(WHITE_LIST_URL).permitAll() // Permite el acceso sin autenticación a las URLs definidas en WHITE_LIST_URL
-                        .anyRequest().authenticated()) // Requiere autenticación para todas las demás solicitudes
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler)) // Configura el manejo de excepciones personalizado AuthEntryPoint
-                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS)) // // Establece la política de manejo de sesiones como "sin estado" (STATLESS), ya que se está utilizando JWT
-                .authenticationProvider(authenticationProvider()) //// Establece el proveedor de autenticación personalizado
-                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class); // // Añade el filtro de autenticación JWT antes del filtro de autenticación de usuario y contraseña
+                        .requestMatchers("/signin", "/signup").permitAll() // Permite el acceso sin autenticación
+                        .requestMatchers("/v1/api/usuarios").hasAuthority("ROLE_USER") // Solo ROLE_USER puede acceder a /usuarios
+                        .requestMatchers("/**").hasAuthority("ROLE_ADMIN") // Solo ROLE_ADMIN puede acceder a /polizas
+                        .anyRequest().authenticated()) // Cualquier otra ruta requiere autenticación
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler)) // Maneja las respuestas no autorizadas
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS)) // Sin estado, ya que se utiliza JWT
+                .authenticationProvider(authenticationProvider()) // Proveedor de autenticación personalizado
+                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class); // Añade el filtro JWT antes de UsernamePasswordAuthentication
 
-        return http.build(); // Devuelve la configuración de seguridad construida
+        return http.build();
     }
 }

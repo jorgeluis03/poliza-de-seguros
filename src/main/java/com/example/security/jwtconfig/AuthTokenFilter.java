@@ -9,11 +9,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 // El filtro de autenticación se ejecuta una vez por cada solicitud HTTP
 public class AuthTokenFilter extends OncePerRequestFilter {
@@ -43,6 +47,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
                 //cargar los detalles del usuario (roles, permisos) desde la base de datos
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+
+                String role = jwtUtils.getRoleFromJwtToken(jwt); // Extraer el rol del JWT
+                List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
 
                 //crea un objeto de autenticacion para el usuario basado en sus detalles
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());

@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -86,7 +85,6 @@ public class UsuarioController {
 	        content = @Content)
 	})
 	@GetMapping //Listar todos los usuarios
-	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<?> obtenerUsuarios(@RequestParam(defaultValue = "0") int page,
 											@RequestParam(defaultValue = "10") int size){
 		Pageable pageable = PageRequest.of(page, size, Sort.by("idUsuario"));
