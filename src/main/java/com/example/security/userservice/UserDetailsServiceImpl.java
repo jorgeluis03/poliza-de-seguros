@@ -1,7 +1,7 @@
 package com.example.security.userservice;
 
-import com.example.entity.Usuario;
-import com.example.repository.UsuarioRepository;
+import com.example.user.model.Usuario;
+import com.example.user.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

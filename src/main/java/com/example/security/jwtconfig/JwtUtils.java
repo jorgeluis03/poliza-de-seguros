@@ -1,13 +1,17 @@
 package com.example.security.jwtconfig;
 import com.example.security.userservice.UserDetailsImpl;
+import com.example.user.model.Usuario;
+import com.example.user.repository.UsuarioRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -15,6 +19,9 @@ import java.util.Date;
 
 @Component
 public class JwtUtils { // 1: CLASE PARA CREAR, VALIDAR Y OBTENER INFORMACION DE TOKENS JWT
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     //Logger para registrar mensajes y errores relacionados con jwt
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
@@ -30,9 +37,13 @@ public class JwtUtils { // 1: CLASE PARA CREAR, VALIDAR Y OBTENER INFORMACION DE
         //Obtiene los detalles de usuario autenticado y lo pone del tipo objeto UserDetailsImpl
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
+        Usuario user = usuarioRepository.findByNombreUsuario(userPrincipal.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("Username no encontrado: " + userPrincipal.getUsername()));
+
         //Contruye el token usando en username, la fecha actual y la fecha de expiracion
         return Jwts.builder()
                 .subject((userPrincipal.getUsername())) //El "subject" del token será el nombre de usuario
+                .claim("role",user.getRol().getNombreRol())
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(getSigningKey()) //Firma el token usando la llave secreta

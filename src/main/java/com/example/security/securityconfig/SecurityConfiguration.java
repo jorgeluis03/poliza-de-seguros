@@ -34,7 +34,7 @@ public class SecurityConfiguration {
     AuthEntryPointJwt unauthorizedHandler; // Manejador para respuestas no autorizadas
 
     //URLS que estan permitidas sin autenticacion
-    private static final String[] WHITE_LIST_URL = {"/signin", "/signup", "v1/api/usuarios"};
+    private static final String[] WHITE_LIST_URL = {"/signin", "/signup"};
 
     //Define un Bean para el filtro JWT, que intercepta las peticiones HTTP y verifica la valides del token
     @Bean
