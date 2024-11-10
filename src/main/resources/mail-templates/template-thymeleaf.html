@@ -2,26 +2,119 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #4782A4;
+            color: white;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            color: #333;
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4782A4;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 0 0 8px 8px;
+            color: #777;
+            font-size: 12px;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Añade una sombra sutil */
+            border-radius: 8px; /* Bordes redondeados */
+            overflow: hidden; /* Para mantener los bordes redondeados */
+        }
+
+        .table th, .table td {
+            padding: 15px; /* Aumenta el relleno */
+            border-bottom: 1px solid #ddd; /* Borde inferior solo */
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #4782A4; /* Color de fondo azul */
+            color: #fff; /* Texto blanco */
+            font-weight: bold;
+            text-transform: uppercase; /* Texto en mayúsculas */
+            letter-spacing: 0.05em; /* Espaciado entre letras */
+        }
+
+        .table td {
+            background-color: #f9f9f9; /* Fondo gris claro */
+            color: #333; /* Color de texto gris */
+        }
+
+        .table tr:last-child td {
+            border-bottom: none; /* Sin borde en la última fila */
+        }
+    </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;">
-<div style="width: 100%; max-width: 600px; margin: auto; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
-    <div style="background-color: #007bff; color: white; padding: 15px; border-radius: 8px 8px 0 0; text-align: center;">
-        <h1 style="margin: 0; font-size: 24px;">¡Bienvenido a Nuestro Servicio!</h1>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>¡La póliza N° [<span>#123456</span>] ha sido Emitida!</h1>
     </div>
-    <div style="padding: 20px; color: #333;">
+    <div class="content">
         <p style="line-height: 1.5; font-size: 16px;">
-            <span th:text="${variable1}">Texto por defecto si variable1 no está definida</span>
+            Nos complace informarte que tu póliza ha sido emitida con éxito. A continuación, encontrarás los detalles de tu póliza y adjunto están los documentos con toda la información necesaria.
         </p>
-        <p style="line-height: 1.5; font-size: 16px;">
-            <span th:text="${variable2}">Texto por defecto si variable2 no está definida</span>
-        </p>
-        <a href="#" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px;">
-            Llamada a la Acción
-        </a>
+
+        <h2 style="font-size: 16px; margin-top: 20px;">Datos de la póliza</h2>
+        <table class="table">
+            <tr>
+                <th>Contratante:</th>
+                <td><span>Lucas Torres</span></td>
+            </tr>
+            <tr>
+                <th>N° de Póliza:</th>
+                <td><span>#123456</span></td>
+            </tr>
+            <tr>
+                <th>Inicio de vigencia:</th>
+                <td><span>01/01/2024</span></td>
+            </tr>
+            <tr>
+                <th>Fin de vigencia:</th>
+                <td><span>31/12/2024</span></td>
+            </tr>
+            <tr>
+                <th>Tipo de Póliza</th>
+                <td><span>Auto</span></td>
+            </tr>
+        </table>
     </div>
-    <div style="text-align: center; padding: 10px; background-color: #f1f1f1; border-radius: 0 0 8px 8px;">
-        <p style="font-size: 12px; color: #777;">Gracias por tu atención.</p>
-        <p style="font-size: 12px; color: #777;">Este es un correo automático, por favor no respondas.</p>
+    <div class="footer">
+        <p>Gracias por tu atención.</p>
+        <p>Este es un correo automático, por favor no respondas.</p>
     </div>
 </div>
 </body>
