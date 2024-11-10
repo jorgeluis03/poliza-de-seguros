@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import com.example.policy.enums.EstadoPoliza;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Data;

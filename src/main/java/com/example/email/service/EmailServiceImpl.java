@@ -39,16 +39,6 @@ public class EmailServiceImpl implements EmailService{
     }
 
     @Override
-    public void sendSimpleMessageUsingTemplate(String to, String subject, String... templateModel) {
-        //templeta de un simple message
-    }
-
-    @Override
-    public void sendMessageWithAttachment(String to, String subject, String text, String pathToAttachment) {
-        //sent files with simple message
-    }
-
-    @Override
     public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel) throws IOException, MessagingException {
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);

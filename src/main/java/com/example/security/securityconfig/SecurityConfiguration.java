@@ -76,10 +76,11 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable) // Deshabilita CSRF para una API REST
                 .cors(AbstractHttpConfigurer::disable) // Deshabilita CORS (puedes personalizarlo)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/signin", "/signup").permitAll() // Permite el acceso sin autenticación
-                        .requestMatchers("/v1/api/usuarios").hasAuthority("ROLE_USER") // Solo ROLE_USER puede acceder a /usuarios
-                        .requestMatchers("/**").hasAuthority("ROLE_ADMIN") // Solo ROLE_ADMIN puede acceder a /polizas
-                        .anyRequest().authenticated()) // Cualquier otra ruta requiere autenticación
+                        .anyRequest().permitAll())
+                        //.requestMatchers("/signin", "/signup").permitAll() // Permite el acceso sin autenticación
+                        //.requestMatchers("/v1/api/usuarios").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN") // Solo ROLE_USER puede acceder a /usuario
+                        //.requestMatchers("/**").hasAuthority("ROLE_ADMIN") // Solo ROLE_ADMIN puede acceder a /polizas
+                        //.anyRequest().authenticated()) // Cualquier otra ruta requiere autenticación
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler)) // Maneja las respuestas no autorizadas
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS)) // Sin estado, ya que se utiliza JWT
                 .authenticationProvider(authenticationProvider()) // Proveedor de autenticación personalizado
