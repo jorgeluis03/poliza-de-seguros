@@ -36,7 +36,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import com.example.common.response.ApiResult;
 
 @RestController
-@RequestMapping("v1/api/polizas")
+@RequestMapping("v1/polices")
 public class PolizaController {
 	
 	@Autowired
@@ -44,9 +44,7 @@ public class PolizaController {
 	
 	@Autowired
 	PolizaService polizaService;
-	
-	
-	//Pólizas
+
 	
 	@PostMapping
     @Operation(summary = "Crear una nueva póliza")
@@ -54,7 +52,7 @@ public class PolizaController {
             @ApiResponse(responseCode = "201", description = "Póliza creada correctamente",
                     content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<?> crearPoliza(@RequestBody PolizaDTO polizaDTO) {
+    public ResponseEntity<?> crearPoliza(@RequestBody PolizaDTO polizaDTO) throws IllegalArgumentException {
         ApiResult<?> apiResult = polizaService.crearPoliza(polizaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResult);
     }

@@ -31,7 +31,7 @@ public class UsuarioService {
 	@Transactional
     public ApiResult<UsuarioDTO> crearUsuario(UsuarioDTO signUpRequest) {
 
-        Rol role = rolRepository.findByNombreRol("ROLE_USER");
+        Rol role = rolRepository.findByNombreRol("ROLE_CLIENT");
 
         Usuario user = new Usuario();
         user.setNombreUsuario(signUpRequest.getNombreUsuario());
@@ -41,7 +41,7 @@ public class UsuarioService {
         user.setEstado(1);
 
         Usuario usuarioGuardado = usuarioRepository.save(user);
-        return new ApiResult<UsuarioDTO>("Usuario creado correctamente", convertirEntityADTO(usuarioGuardado));
+        return new ApiResult<UsuarioDTO>("Registro completado", convertirEntityADTO(usuarioGuardado));
     }
 
     @Transactional(readOnly = true)

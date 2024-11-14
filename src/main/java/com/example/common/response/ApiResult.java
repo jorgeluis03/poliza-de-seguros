@@ -7,11 +7,11 @@ import lombok.Setter;
 @Setter
 public class ApiResult<T> {
 	private String message;
-	private T body;
+	private T payload;
 	
-	public ApiResult(String message, T body) {
+	public ApiResult(String message, T payload) {
 		this.message = message;
-		this.body = body;
+		this.payload = payload;
 	}
 	
 }

@@ -1,7 +1,12 @@
 package com.example.policy.service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
+import com.example.policy.enums.EstadoPoliza;
+import com.example.policy.strategy.ContextStrategy;
+import com.example.policy.strategy.PolicyStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +38,9 @@ public class PolizaService {
 	PolizaAutoRepository detallesAutoRepository;
 	@Autowired
 	PolizaInmuebleRepository polizaInmuebleRepository;
+
+	@Autowired
+	ContextStrategy contextStrategy;
 	
 	@Transactional
 	public ApiResult<?> crearPoliza(PolizaDTO polizaDTO){
@@ -40,13 +48,26 @@ public class PolizaService {
 		Usuario usuario = usuarioRepository.findById(polizaDTO.getIdUsuario())
 							.orElseThrow(() -> new UsuarioNoEncontradoException("No se encontró el usuario con ID: "+polizaDTO.getIdUsuario()));
 
-		Poliza poliza = convertirDtoAEntidad(polizaDTO);
+		Poliza poliza = new Poliza();
 		poliza.setUsuario(usuario);
+		poliza.setTipoPoliza(polizaDTO.getTipoPoliza());
+		poliza.setFechaInicio(polizaDTO.getFechaInicio());
+		poliza.setFechaVencimiento(polizaDTO.getFechaVencimiento());
+		poliza.setMontoAsegurado(polizaDTO.getMontoAsegurado());
 		poliza.setNumeroPoliza(generarNumeroPoliza());
-		
+		poliza.setEstado(EstadoPoliza.PENDIENTE);
 		polizaRepository.save(poliza);
-		
-		return new ApiResult<>("Poliza creada correctamente", convertirEntidadADto(poliza));
+
+		PolicyStrategy strategy = contextStrategy.getPolicyStrategy(polizaDTO.getTipoPoliza());
+		if(strategy!=null){
+			strategy.savePolicy(polizaDTO,poliza);
+		}else {
+			throw new IllegalArgumentException("Tipo de póliza no soportado: "+polizaDTO.getTipoPoliza());
+		}
+
+		return new ApiResult<>("Póliza solicitada correctamente", new HashMap<String, Object>() {{
+			put("id", poliza.getIdPoliza());
+		}});
 	}
 	
 	
@@ -57,8 +78,6 @@ public class PolizaService {
 	                        .orElseThrow(() -> new PolizaNoEncontradaException("Poliza no encontrada con ID: " + idPoliza));
 
 	    // Actualizar los campos de la poliza con los datos del DTO
-	    poliza.setTipoPoliza(polizaDTO.getTipoPoliza());
-	    poliza.setDetalles(polizaDTO.getDetalles());
 	    poliza.setFechaInicio(polizaDTO.getFechaInicio());
 	    poliza.setFechaVencimiento(polizaDTO.getFechaVencimiento());
 	    poliza.setMontoAsegurado(polizaDTO.getMontoAsegurado());
@@ -191,7 +210,6 @@ public class PolizaService {
 	public Poliza convertirDtoAEntidad(PolizaDTO polizaDTO) {
 	    Poliza poliza = new Poliza();
 	    poliza.setTipoPoliza(polizaDTO.getTipoPoliza());
-	    poliza.setDetalles(polizaDTO.getDetalles());
 	    poliza.setFechaInicio(polizaDTO.getFechaInicio());
 	    poliza.setFechaVencimiento(polizaDTO.getFechaVencimiento());
 	    poliza.setMontoAsegurado(polizaDTO.getMontoAsegurado());
@@ -206,7 +224,6 @@ public class PolizaService {
         polizaDTO.setIdUsuario(poliza.getUsuario().getIdUsuario());
         polizaDTO.setNumeroPoliza(poliza.getNumeroPoliza());
         polizaDTO.setTipoPoliza(poliza.getTipoPoliza());
-        polizaDTO.setDetalles(poliza.getDetalles());
         polizaDTO.setFechaInicio(poliza.getFechaInicio());
         polizaDTO.setFechaVencimiento(poliza.getFechaVencimiento());
         polizaDTO.setMontoAsegurado(poliza.getMontoAsegurado());
@@ -215,7 +232,7 @@ public class PolizaService {
         return polizaDTO;
 	}
 	
-	public String generarNumeroPoliza() {
+	private String generarNumeroPoliza() {
         Random random = new Random();
         int numeroPoliza = 1000000 + random.nextInt(9000000);
         return "POL" + numeroPoliza;

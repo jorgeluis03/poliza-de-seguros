@@ -16,10 +16,20 @@ public class PolizaDTO {
 	private Integer idUsuario;
 	private String numeroPoliza;
 	private Integer tipoPoliza;
-	private String detalles;
+	private Double montoAsegurado;
 	private LocalDate fechaInicio;
 	private LocalDate fechaVencimiento;
-	private Double montoAsegurado;
+	// Campos de Auto
+	private String marcaAuto;
+	private String modeloAuto;
+	private Integer anioAuto;
+	private String numeroPlaca;
+	// Campos de Inmueble
+	private String direccionInmueble;
+	private String tipoInmueble;
+	// Campos de Celular
+	private String marcaCelular;
+	private String modeloCelular;
 	@Enumerated(EnumType.STRING)
 	private EstadoPoliza estado;
 

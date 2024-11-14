@@ -78,7 +78,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req -> req
                         .anyRequest().permitAll())
                         //.requestMatchers("/signin", "/signup").permitAll() // Permite el acceso sin autenticación
-                        //.requestMatchers("/v1/api/usuarios").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN") // Solo ROLE_USER puede acceder a /usuario
+                        //.requestMatchers("/v1/api/usuarios").hasAnyAuthority("ROLE_CLIENT", "ROLE_ADMIN") // Solo ROLE_USER puede acceder a /usuario
                         //.requestMatchers("/**").hasAuthority("ROLE_ADMIN") // Solo ROLE_ADMIN puede acceder a /polizas
                         //.anyRequest().authenticated()) // Cualquier otra ruta requiere autenticación
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler)) // Maneja las respuestas no autorizadas

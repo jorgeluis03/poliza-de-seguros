@@ -34,8 +34,6 @@ public class Poliza {
 	@Column(name = "tipo_poliza")
     private Integer tipoPoliza;
 	
-	private String detalles;
-	
     @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;
 
