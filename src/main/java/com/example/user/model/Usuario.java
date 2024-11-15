@@ -48,8 +48,8 @@ public class Usuario {
     private String dni;
     private String telefono;
     private String direccion;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JoinColumn(name = "id_rol")
     private Rol rol;
 

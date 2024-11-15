@@ -1,24 +1,17 @@
 package com.example.policy.model;
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
+
 import com.example.policy.enums.EstadoPoliza;
 import com.example.user.model.Usuario;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 @Data
 @Entity
 @Table(name = "polizas")
-public class Poliza {
-
+public class Poliza implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_poliza")
@@ -47,10 +40,14 @@ public class Poliza {
 	@Enumerated(EnumType.STRING)
     @Column(name = "estado" )
     private EstadoPoliza estado;
-    /*
-    @OneToOne(mappedBy = "poliza", cascade = CascadeType.ALL, orphanRemoval = true)
-    private PolizaInmueble polizaInmueble;
-    
-    @OneToOne(mappedBy = "poliza", cascade = CascadeType.ALL, orphanRemoval = true)
-    private PolizaAuto polizaAuto;*/
+
+	@OneToOne(mappedBy = "poliza", cascade = CascadeType.ALL, orphanRemoval = true)
+	private PolizaAuto polizaAuto;
+
+	@OneToOne(mappedBy = "poliza", cascade = CascadeType.ALL, orphanRemoval = true)
+	private PolizaCelular polizaCelular;
+
+	@OneToOne(mappedBy = "poliza", cascade = CascadeType.ALL, orphanRemoval = true)
+	private PolizaInmueble polizaInmueble;
+
 }

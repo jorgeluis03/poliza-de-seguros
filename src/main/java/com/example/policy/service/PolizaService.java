@@ -4,12 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import com.example.policy.dto.DetallesCelularDTO;
 import com.example.policy.enums.EstadoPoliza;
+import com.example.policy.model.PolizaCelular;
+import com.example.policy.repository.PolizaCelularRepository;
 import com.example.policy.strategy.ContextStrategy;
 import com.example.policy.strategy.PolicyStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +42,8 @@ public class PolizaService {
 	PolizaAutoRepository detallesAutoRepository;
 	@Autowired
 	PolizaInmuebleRepository polizaInmuebleRepository;
+	@Autowired
+	PolizaCelularRepository polizaCelularRepository;
 
 	@Autowired
 	ContextStrategy contextStrategy;
@@ -45,8 +51,8 @@ public class PolizaService {
 	@Transactional
 	public ApiResult<?> crearPoliza(PolizaDTO polizaDTO){
 		
-		Usuario usuario = usuarioRepository.findById(polizaDTO.getIdUsuario())
-							.orElseThrow(() -> new UsuarioNoEncontradoException("No se encontró el usuario con ID: "+polizaDTO.getIdUsuario()));
+		Usuario usuario = usuarioRepository.findByNombreUsuario(polizaDTO.getUsuario())
+							.orElseThrow(() -> new UsuarioNoEncontradoException("No se encontró el usuario con username: "+polizaDTO.getUsuario()));
 
 		Poliza poliza = new Poliza();
 		poliza.setUsuario(usuario);
@@ -69,23 +75,42 @@ public class PolizaService {
 			put("id", poliza.getIdPoliza());
 		}});
 	}
-	
+
+	@Transactional
+	public Page<PolizaDTO> obtenerPolizaPorUsuario(String username, Pageable pageable){
+		Usuario usuario = usuarioRepository.findByNombreUsuario(username)
+				.orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: "+username));
+
+		Page<Poliza> polizasByUsuario = polizaRepository.findByUsuario(usuario, pageable);
+		return polizasByUsuario.map(this::convertirEntidadADto);
+	}
 	
 	@Transactional
 	public ApiResult<?> editarPoliza(Integer idPoliza, PolizaDTO polizaDTO) {
-	    // Buscar la poliza por ID
-	    Poliza poliza = polizaRepository.findById(idPoliza)
-	                        .orElseThrow(() -> new PolizaNoEncontradaException("Poliza no encontrada con ID: " + idPoliza));
+		Usuario usuario = usuarioRepository.findByNombreUsuario(polizaDTO.getUsuario())
+				.orElseThrow(() -> new UsuarioNoEncontradoException("No se encontró el usuario con username: "+polizaDTO.getUsuario()));
+		Poliza poliza = polizaRepository.findById(idPoliza)
+						.orElseThrow(() -> new PolizaNoEncontradaException("No se encontró la poliza: "+idPoliza));
 
-	    // Actualizar los campos de la poliza con los datos del DTO
-	    poliza.setFechaInicio(polizaDTO.getFechaInicio());
-	    poliza.setFechaVencimiento(polizaDTO.getFechaVencimiento());
-	    poliza.setMontoAsegurado(polizaDTO.getMontoAsegurado());
-	    poliza.setEstado(polizaDTO.getEstado());
+		poliza.setUsuario(usuario);
+		poliza.setTipoPoliza(polizaDTO.getTipoPoliza());
+		poliza.setFechaInicio(polizaDTO.getFechaInicio());
+		poliza.setFechaVencimiento(polizaDTO.getFechaVencimiento());
+		poliza.setMontoAsegurado(polizaDTO.getMontoAsegurado());
+		poliza.setNumeroPoliza(generarNumeroPoliza());
+		poliza.setEstado(EstadoPoliza.PENDIENTE);
+		polizaRepository.save(poliza);
 
-	    polizaRepository.save(poliza);
+		PolicyStrategy strategy = contextStrategy.getPolicyStrategy(polizaDTO.getTipoPoliza());
+		if(strategy!=null){
+			strategy.savePolicy(polizaDTO,poliza);
+		}else {
+			throw new IllegalArgumentException("Tipo de póliza no soportado: "+polizaDTO.getTipoPoliza());
+		}
 
-	    return new ApiResult<>("Poliza actualizada correctamente", convertirEntidadADto(poliza));
+		return new ApiResult<>("Solicitud de edicion enviada", new HashMap<String, Object>() {{
+			put("id", poliza.getIdPoliza());
+		}});
 	}
 	
 	@Transactional(readOnly = true)
@@ -108,8 +133,7 @@ public class PolizaService {
 	public void borrarPoliza(Integer idPoliza) {
 	    Poliza poliza = polizaRepository.findById(idPoliza)
 	                        .orElseThrow(() -> new PolizaNoEncontradaException("Poliza no encontrada con ID: " + idPoliza));
-
-	    polizaRepository.deleteById(idPoliza);
+	    polizaRepository.delete(poliza);
 	}
 
 	// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -132,10 +156,16 @@ public class PolizaService {
 
 	@Transactional(readOnly = true)
 	public ApiResult<?> obtenerDetallesAuto(int idPoliza) {
-        PolizaAuto polizaAuto = detallesAutoRepository.findByPolizaId(idPoliza)
-        							.orElseThrow(() -> new PolizaNoEncontradaException("Poliza no encontrada con ID: " + idPoliza));
-       
-        return new ApiResult<>("Poliza Auto encontrada",polizaAuto);
+		PolizaAuto auto = detallesAutoRepository.findByPolizaId(idPoliza)
+									.orElseThrow(() -> new PolizaNoEncontradaException("Poliza no encontrada con ID: " + idPoliza));
+		DetallesAutoDTO autoDTO = new DetallesAutoDTO();
+		autoDTO.setIdAuto(auto.getIdPolizaAuto());
+		autoDTO.setIdPoliza(auto.getPoliza().getIdPoliza());
+	   	autoDTO.setMarca(auto.getMarca());
+	   	autoDTO.setModelo(auto.getModelo());
+	   	autoDTO.setAnio(auto.getAnio());
+	   	autoDTO.setNumeroPlaca(auto.getNumeroPlaca());
+	   	return new ApiResult<>("Poliza Auto encontrada",autoDTO);
     }
 
 	@Transactional
@@ -180,10 +210,14 @@ public class PolizaService {
 	
 	@Transactional(readOnly = true)
 	public ApiResult<?> obtenerDetallesInmueble(int idPoliza) {
-        PolizaInmueble polizaInmueble = polizaInmuebleRepository.findByPolizaId(idPoliza)
+        PolizaInmueble inmueble = polizaInmuebleRepository.findByPolizaId(idPoliza)
         							.orElseThrow(() -> new PolizaNoEncontradaException("Poliza no encontrada con ID: " + idPoliza));
-       
-        return new ApiResult<>("Poliza Inmbueble encontrada",polizaInmueble);
+		DetallesInmuebleDTO inmuebleDTO = new DetallesInmuebleDTO();
+		inmuebleDTO.setIdPoliza(inmueble.getPoliza().getIdPoliza());
+		inmuebleDTO.setIdInmueble(inmueble.getIdPolizaInmueble());
+		inmuebleDTO.setDireccion(inmueble.getDireccion());
+		inmuebleDTO.setTipoInmueble(inmueble.getTipoInmueble());
+        return new ApiResult<>("Poliza Inmbueble encontrada",inmuebleDTO);
     }
 	
 	@Transactional
@@ -205,7 +239,20 @@ public class PolizaService {
 
         polizaInmuebleRepository.delete(polizaInmueble);
     }
-	
+
+	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	@Transactional(readOnly = true)
+	public ApiResult<?> obtenerDetallesCelular(int idPoliza) {
+		PolizaCelular celular = polizaCelularRepository.findByPolizaId(idPoliza)
+				.orElseThrow(() -> new PolizaNoEncontradaException("Poliza no encontrada con ID: " + idPoliza));
+		DetallesCelularDTO celularDTO = new DetallesCelularDTO();
+		celularDTO.setIdCelular(celular.getIdCelular());
+		celularDTO.setIdPoliza(celular.getPoliza().getIdPoliza());
+		celularDTO.setMarca(celular.getMarca());
+		celularDTO.setModelo(celular.getModelo());
+		return new ApiResult<>("Poliza Celular encontrada",celularDTO);
+	}
+
 	
 	public Poliza convertirDtoAEntidad(PolizaDTO polizaDTO) {
 	    Poliza poliza = new Poliza();
@@ -221,7 +268,7 @@ public class PolizaService {
 		
 		PolizaDTO polizaDTO = new PolizaDTO();
         polizaDTO.setIdPoliza(poliza.getIdPoliza());
-        polizaDTO.setIdUsuario(poliza.getUsuario().getIdUsuario());
+        polizaDTO.setUsuario(poliza.getUsuario().getNombreUsuario());
         polizaDTO.setNumeroPoliza(poliza.getNumeroPoliza());
         polizaDTO.setTipoPoliza(poliza.getTipoPoliza());
         polizaDTO.setFechaInicio(poliza.getFechaInicio());

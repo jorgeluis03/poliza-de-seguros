@@ -15,7 +15,9 @@ public class InmueblePolicyStrategy implements PolicyStrategy {
 
     @Override
     public void savePolicy(PolizaDTO polizaDTO, Poliza poliza) {
-        PolizaInmueble polizaInmueble = new PolizaInmueble();
+        PolizaInmueble polizaInmueble = inmuebleRepository.findByPolizaId(poliza.getIdPoliza())
+                        .orElse(new PolizaInmueble());
+
         polizaInmueble.setPoliza(poliza);
         polizaInmueble.setDireccion(polizaDTO.getDireccionInmueble());
         polizaInmueble.setTipoInmueble(polizaDTO.getTipoInmueble());

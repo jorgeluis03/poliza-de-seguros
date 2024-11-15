@@ -13,7 +13,7 @@ import lombok.Data;
 public class PolizaDTO {
 	
 	private Integer idPoliza;
-	private Integer idUsuario;
+	private String usuario;
 	private String numeroPoliza;
 	private Integer tipoPoliza;
 	private Double montoAsegurado;

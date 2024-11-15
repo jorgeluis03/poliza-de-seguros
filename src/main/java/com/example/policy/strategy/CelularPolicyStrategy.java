@@ -15,7 +15,10 @@ public class CelularPolicyStrategy implements PolicyStrategy {
 
     @Override
     public void savePolicy(PolizaDTO polizaDTO, Poliza poliza) {
-        PolizaCelular polizaCelular = new PolizaCelular();
+
+        PolizaCelular polizaCelular = celularRepository.findByPolizaId(poliza.getIdPoliza())
+                .orElse(new PolizaCelular());
+
         polizaCelular.setPoliza(poliza);
         polizaCelular.setMarca(polizaDTO.getMarcaCelular());
         polizaCelular.setModelo(polizaDTO.getModeloCelular());
