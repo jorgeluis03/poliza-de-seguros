@@ -31,7 +31,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("v1/api/usuarios")
+@RequestMapping("v1/users")
 public class UsuarioController {
 	
 	@Autowired

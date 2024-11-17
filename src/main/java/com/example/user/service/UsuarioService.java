@@ -85,7 +85,7 @@ public class UsuarioService {
     }
 
     // Conversión de Entity a DTO
-    private UsuarioDTO convertirEntityADTO(Usuario usuario) {
+    public UsuarioDTO convertirEntityADTO(Usuario usuario) {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.setIdUsuario(usuario.getIdUsuario());
         usuarioDTO.setNombreUsuario(usuario.getNombreUsuario());

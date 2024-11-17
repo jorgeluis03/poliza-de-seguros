@@ -1,4 +1,5 @@
 package com.example.email.service;
+import com.example.policy.model.Poliza;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.context.Context;
@@ -39,7 +41,15 @@ public class EmailServiceImpl implements EmailService{
     }
 
     @Override
-    public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel) throws IOException, MessagingException {
+    public void sendMessageUsingThymeleafTemplate(String to, String subject, Poliza poliza) throws IOException, MessagingException {
+        Map<String, Object> templateModel = new HashMap<>();
+        templateModel.put("numeroPoliza", poliza.getNumeroPoliza());
+        templateModel.put("contratante", poliza.getUsuario().getCorreo());
+        templateModel.put("inicioVigencia", poliza.getFechaInicio());
+        templateModel.put("vencimientoVigencia", poliza.getFechaVencimiento());
+        templateModel.put("tipoPoliza", poliza.getTipoPoliza());
+        templateModel.put("estado", poliza.getEstado());
+
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
 

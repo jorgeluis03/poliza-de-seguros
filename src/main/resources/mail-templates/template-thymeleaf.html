@@ -81,7 +81,7 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1>¡La póliza N° [<span>#123456</span>] ha sido Emitida!</h1>
+        <h1>¡La póliza N° [<span th:text="${numeroPoliza}">#123456</span>] ha sido Emitida!</h1>
     </div>
     <div class="content">
         <p style="line-height: 1.5; font-size: 16px;">
@@ -92,23 +92,27 @@
         <table class="table">
             <tr>
                 <th>Contratante:</th>
-                <td><span>Lucas Torres</span></td>
+                <td><span th:text="${contratante}">Lucas Torres</span></td>
             </tr>
             <tr>
                 <th>N° de Póliza:</th>
-                <td><span>#123456</span></td>
+                <td><span th:text="${numeroPoliza}">#123456</span></td>
             </tr>
             <tr>
                 <th>Inicio de vigencia:</th>
-                <td><span>01/01/2024</span></td>
+                <td><span th:text="${inicioVigencia}">01/01/2024</span></td>
             </tr>
             <tr>
                 <th>Fin de vigencia:</th>
-                <td><span>31/12/2024</span></td>
+                <td><span th:text="${vencimientoVigencia}">31/12/2024</span></td>
             </tr>
             <tr>
                 <th>Tipo de Póliza</th>
-                <td><span>Auto</span></td>
+                <td><span th:text="${tipoPoliza}">Auto</span></td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td><span th:text="${estado}">Pendiente</span></td>
             </tr>
         </table>
     </div>

@@ -3,6 +3,7 @@ package com.example.policy.dto;
 import java.time.LocalDate;
 
 import com.example.policy.enums.EstadoPoliza;
+import com.example.user.dto.UsuarioDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,6 +15,7 @@ public class PolizaDTO {
 	
 	private Integer idPoliza;
 	private String usuario;
+	private UsuarioDTO usuarioDTO;
 	private String numeroPoliza;
 	private Integer tipoPoliza;
 	private Double montoAsegurado;

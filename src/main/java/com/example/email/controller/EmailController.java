@@ -1,6 +1,7 @@
 package com.example.email.controller;
 
 import com.example.email.service.EmailServiceImpl;
+import com.example.policy.model.Poliza;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +39,7 @@ public class EmailController {
             templateModel.put("variable2", "Valor para la variable 2");
 
             // Llama al metodo que usa la plantilla Thymeleaf
-            emailService.sendMessageUsingThymeleafTemplate(to, subject, templateModel);
+            emailService.sendMessageUsingThymeleafTemplate(to, subject, new Poliza());
 
             return "Correo enviado con éxito con plantilla";
         } catch (Exception e) {

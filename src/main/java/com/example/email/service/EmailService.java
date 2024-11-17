@@ -1,5 +1,6 @@
 package com.example.email.service;
 
+import com.example.policy.model.Poliza;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
@@ -12,6 +13,6 @@ public interface EmailService {
 
     void sendMessageUsingThymeleafTemplate(String to,
                                            String subject,
-                                           Map<String, Object> templateModel)
+                                           Poliza templateModel)
             throws IOException, MessagingException;
 }

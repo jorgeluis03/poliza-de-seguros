@@ -2,12 +2,10 @@ package com.example.user.model;
 import java.util.Set;
 
 import com.example.policy.model.Poliza;
-import com.example.policy.model.PolizaSolicitud;
 import com.example.role.model.Rol;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -54,10 +52,7 @@ public class Usuario {
     private Rol rol;
 
     private Integer estado;
-    
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PolizaSolicitud> polizaSolicitudes;
-    
+
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<Poliza> polizas;
     
