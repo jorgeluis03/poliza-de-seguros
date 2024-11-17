@@ -25,7 +25,7 @@ public class Poliza implements Serializable {
     private String numeroPoliza;
 	
 	@Column(name = "tipo_poliza")
-    private Integer tipoPoliza;
+    private String tipoPoliza;
 	
     @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;

@@ -151,8 +151,16 @@ public class PolizaService {
 	}
 
 	@Transactional
-	public List<PolizaDTO> buscarPoliza(String numPoliza, String tipoPoliza){
-		List<Poliza> polizas = polizaRepository.searchPoliza(numPoliza, tipoPoliza);
+	public List<PolizaDTO> buscarPoliza(String numPoliza, String tipoPoliza, String usuario){
+		Usuario user;
+		List<Poliza> polizas;
+		if (!usuario.isEmpty()) {
+			user = usuarioRepository.findByCorreo(usuario)
+					.orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado"));
+			polizas = polizaRepository.searchPoliza(numPoliza, tipoPoliza, String.valueOf(user.getIdUsuario()));
+		}else {
+			polizas = polizaRepository.searchPoliza(numPoliza, tipoPoliza,"");
+		}
 		return  polizas.stream().map(this::convertirEntidadADto).collect(Collectors.toList());
 	}
 

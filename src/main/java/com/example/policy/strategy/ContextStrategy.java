@@ -14,13 +14,13 @@ public class ContextStrategy {
     CelularPolicyStrategy celularPolicyStrategy;
 
 
-    public PolicyStrategy getPolicyStrategy(Integer tipoPoliza) {
+    public PolicyStrategy getPolicyStrategy(String tipoPoliza) {
         switch (tipoPoliza) {
-            case 1:
+            case "Auto":
                 return autoPolicyStrategy;
-            case 2:
+            case "Inmueble":
                 return inmueblePolicyStrategy;
-            case 3:
+            case "Celular":
                 return celularPolicyStrategy;
             default:
                 return null;

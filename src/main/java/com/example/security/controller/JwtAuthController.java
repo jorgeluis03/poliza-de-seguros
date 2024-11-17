@@ -15,7 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,7 +56,7 @@ public class JwtAuthController {
         );
 
         //Establece la autenticacion en el contexto de seguridad de la app
-        SecurityContextHolder .getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         //Obtiene los detalles de usuario autenticado
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 

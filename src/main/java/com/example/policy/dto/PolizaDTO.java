@@ -1,7 +1,5 @@
 package com.example.policy.dto;
-
 import java.time.LocalDate;
-
 import com.example.policy.enums.EstadoPoliza;
 import com.example.user.dto.UsuarioDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,7 +15,7 @@ public class PolizaDTO {
 	private String usuario;
 	private UsuarioDTO usuarioDTO;
 	private String numeroPoliza;
-	private Integer tipoPoliza;
+	private String tipoPoliza;
 	private Double montoAsegurado;
 	private LocalDate fechaInicio;
 	private LocalDate fechaVencimiento;

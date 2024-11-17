@@ -130,8 +130,9 @@ public class PolizaController {
 
     @GetMapping("/search")
     public ResponseEntity<?> buscarPoliza(@RequestParam(defaultValue = "") String numeroPoliza,
-                                          @RequestParam(defaultValue = "0") String tipoPoliza){
-        List<PolizaDTO> polizaDTOS = polizaService.buscarPoliza(numeroPoliza, tipoPoliza);
+                                          @RequestParam(defaultValue = "") String tipoPoliza,
+                                          @RequestParam(defaultValue = "") String usuarioCorreo){
+        List<PolizaDTO> polizaDTOS = polizaService.buscarPoliza(numeroPoliza, tipoPoliza, usuarioCorreo);
         return ResponseEntity.ok(polizaDTOS);
     }
 	

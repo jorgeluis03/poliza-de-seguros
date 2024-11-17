@@ -22,7 +22,10 @@ public interface PolizaRepository extends JpaRepository<Poliza, Integer>{
 	@Query(nativeQuery = true, value = "SELECT * " +
 			"FROM polizas " +
 			"WHERE (:numPoliza = '' OR numero_poliza = :numPoliza) " +
-			"AND (:tipoPoliza = '0' OR tipo_poliza = :tipoPoliza)")
-	List<Poliza> searchPoliza(@Param("numPoliza") String numPoliza, @Param("tipoPoliza") String tipoPoliza);
+			"AND (:tipoPoliza = '' OR tipo_poliza = :tipoPoliza)" +
+			"AND (:idUsuario = '' OR id_usuario = :idUsuario)")
+	List<Poliza> searchPoliza(@Param("numPoliza") String numPoliza,
+							  @Param("tipoPoliza") String tipoPoliza,
+							  @Param("idUsuario" ) String idUsuario);
 
 }
