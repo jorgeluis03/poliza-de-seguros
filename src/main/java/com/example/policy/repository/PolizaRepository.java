@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.example.policy.model.Poliza;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PolizaRepository extends JpaRepository<Poliza, Integer>{
@@ -25,7 +26,7 @@ public interface PolizaRepository extends JpaRepository<Poliza, Integer>{
 			"AND (:tipoPoliza = '' OR tipo_poliza = :tipoPoliza)" +
 			"AND (:idUsuario = '' OR id_usuario = :idUsuario)")
 	List<Poliza> searchPoliza(@Param("numPoliza") String numPoliza,
-							  @Param("tipoPoliza") String tipoPoliza,
-							  @Param("idUsuario" ) String idUsuario);
+						  @Param("tipoPoliza") String tipoPoliza,
+						  @Param("idUsuario" ) String idUsuario);
 
 }

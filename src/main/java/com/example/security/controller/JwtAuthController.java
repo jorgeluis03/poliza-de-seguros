@@ -41,7 +41,7 @@ public class JwtAuthController {
     public ResponseEntity<?> registerUser(@RequestBody UsuarioDTO signUpRequest, HttpServletRequest request) throws UnsupportedEncodingException, RolNoEncontradoException {
         //verifica si ya existe un usurio con el mismo username
         if(userRepository.existsByNombreUsuario(signUpRequest.getNombreUsuario())){
-            return ResponseEntity.badRequest().body("Error: Username ya existe");
+            return ResponseEntity.badRequest().body("Ya existe este nombre de usuario.");
         }
 
         ApiResult<UsuarioDTO> apiResult = usuarioService.crearUsuario(signUpRequest);

@@ -1,4 +1,5 @@
 package com.example.policy.controller;
+import com.example.user.exception.UsuarioNoEncontradoException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -131,7 +132,7 @@ public class PolizaController {
     @GetMapping("/search")
     public ResponseEntity<?> buscarPoliza(@RequestParam(defaultValue = "") String numeroPoliza,
                                           @RequestParam(defaultValue = "") String tipoPoliza,
-                                          @RequestParam(defaultValue = "") String usuarioCorreo){
+                                          @RequestParam(defaultValue = "") String usuarioCorreo) throws PolizaNoEncontradaException, UsuarioNoEncontradoException {
         List<PolizaDTO> polizaDTOS = polizaService.buscarPoliza(numeroPoliza, tipoPoliza, usuarioCorreo);
         return ResponseEntity.ok(polizaDTOS);
     }
