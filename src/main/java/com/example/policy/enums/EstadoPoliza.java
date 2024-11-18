@@ -4,5 +4,6 @@ public enum EstadoPoliza {
 	VIGENTE,
 	CANCELADO,
 	EXPIRADO,
-	PENDIENTE
+	PENDIENTE,
+	RECHAZADO
 }
