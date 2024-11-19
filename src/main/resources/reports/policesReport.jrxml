@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="books" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="71104859-cb8c-436d-a51b-f60d990baf82">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="books" pageWidth="842" pageHeight="595" whenNoDataType="AllSectionsNoDetail" columnWidth="490" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="71104859-cb8c-436d-a51b-f60d990baf82">
     <property name="template.engine" value="tabular_template"/>
     <style name="Table_TH" mode="Opaque" backcolor="#8A1C48">
         <box>
@@ -20,29 +19,28 @@
             <bottomPen lineWidth="0.5" lineColor="#000000"/>
         </box>
     </style>
-    <subDataset name="petsDataSet" uuid="b93e8799-f7aa-4d00-842a-c4e2a600bc8c">
+    <subDataset name="polizaDataSet" uuid="b93e8799-f7aa-4d00-842a-c4e2a600bc8c">
         <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
         <field name="idPoliza" class="java.lang.Integer"/>
-        <field name="idUsuario" class="java.lang.Integer"/>
         <field name="numeroPoliza" class="java.lang.String"/>
-        <field name="tipoPoliza" class="java.lang.Integer"/>
-        <field name="detalles" class="java.lang.String"/>
+        <field name="tipoPoliza" class="java.lang.String"/>
+        <field name="montoAsegurado" class="java.lang.Double"/>
         <field name="fechaInicio" class="java.time.LocalDate"/>
-        <field name="fechaVencimiento" class="java.time.LocalDat"/>
-        <field name="estado" class="java.lang.String"/>
+        <field name="fechaVencimiento" class="java.time.LocalDate"/>
+        <field name="estado" class="com.example.policy.enums.EstadoPoliza"/>
         <sortField name="idPoliza"/>
     </subDataset>
-    <parameter name="petsData" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+    <parameter name="polizaData" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
     <title>
         <band height="31">
             <frame>
-                <reportElement mode="Opaque" x="-20" y="-20" width="595" height="50" backcolor="#8A1C48" uuid="25fef76e-caa9-470c-8255-3aa2b60f3e81"/>
+                <reportElement mode="Opaque" x="-20" y="-20" width="842" height="50" backcolor="#8A1C48" uuid="25fef76e-caa9-470c-8255-3aa2b60f3e81"/>
                 <staticText>
-                    <reportElement x="20" y="10" width="555" height="30" forecolor="#FFFFFF" uuid="eceb496a-d5d0-4b4f-a3bb-1403ee25e2a6"/>
+                    <reportElement x="20" y="10" width="800" height="30" forecolor="#FFFFFF" uuid="eceb496a-d5d0-4b4f-a3bb-1403ee25e2a6"/>
                     <textElement textAlignment="Center">
                         <font size="20" isBold="true"/>
                     </textElement>
-                    <text><![CDATA[Reporte de Mascotas]]></text>
+                    <text><![CDATA[Reporte de Pólizas]]></text>
                 </staticText>
             </frame>
         </band>
@@ -59,93 +57,135 @@
                     <property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
                 </reportElement>
                 <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-                    <datasetRun subDataset="petsDataSet" uuid="eb6d77e7-0137-4151-b4ab-b4316afe36af">
-                        <dataSourceExpression><![CDATA[$P{petsData}]]></dataSourceExpression>
+                    <datasetRun subDataset="polizaDataSet" uuid="eb6d77e7-0137-4151-b4ab-b4316afe36af">
+                        <dataSourceExpression><![CDATA[$P{polizaData}]]></dataSourceExpression>
                     </datasetRun>
-                    <jr:column width="90" uuid="355b0a62-48d2-47e9-b8cc-32f7c7dea431">
+                    <jr:column width="80" uuid="355b0a62-48d2-47e9-b8cc-32f7c7dea431">
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
                         <jr:columnHeader style="Table_CH" height="30" rowSpan="1">
                             <staticText>
-                                <reportElement x="0" y="0" width="90" height="30" forecolor="#FFFFFF" uuid="e0ffbf9a-f51c-41be-955f-48594b331205"/>
+                                <reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="e0ffbf9a-f51c-41be-955f-48594b331205"/>
                                 <box>
                                     <pen lineColor="#FFFFFF"/>
                                 </box>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="SansSerif" size="12" isBold="true"/>
                                 </textElement>
-                                <text><![CDATA[ID]]></text>
+                                <text><![CDATA[N° Póliza]]></text>
                             </staticText>
                         </jr:columnHeader>
                         <jr:detailCell style="Table_TD" height="30">
                             <textField>
-                                <reportElement x="0" y="0" width="90" height="30" uuid="c34423a1-8834-4831-8a3e-d5bc4d2e8da8"/>
+                                <reportElement x="0" y="0" width="80" height="30" uuid="c34423a1-8834-4831-8a3e-d5bc4d2e8da8"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="SansSerif" size="12"/>
                                 </textElement>
-                                <textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+                                <textFieldExpression><![CDATA[$F{numeroPoliza}]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
-                    <jr:column width="155" uuid="69f55cb2-9bee-4dde-a79e-46e636be1017">
+                    <jr:column width="140" uuid="69f55cb2-9bee-4dde-a79e-46e636be1017">
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
                         <jr:columnHeader style="Table_CH" height="30" rowSpan="1">
                             <staticText>
-                                <reportElement x="0" y="0" width="155" height="30" forecolor="#FFFFFF" uuid="44e19529-d39a-4330-92a0-24fb4c35e13d"/>
+                                <reportElement x="0" y="0" width="140" height="30" forecolor="#FFFFFF" uuid="44e19529-d39a-4330-92a0-24fb4c35e13d"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="SansSerif" size="12" isBold="true"/>
                                 </textElement>
-                                <text><![CDATA[Nombre]]></text>
+                                <text><![CDATA[Tipo de Póliza]]></text>
                             </staticText>
                         </jr:columnHeader>
                         <jr:detailCell style="Table_TD" height="30">
                             <textField>
-                                <reportElement x="0" y="0" width="155" height="30" uuid="050e6310-3782-4a48-a5fd-54574e45bd29"/>
+                                <reportElement x="0" y="0" width="140" height="30" uuid="050e6310-3782-4a48-a5fd-54574e45bd29"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font size="12"/>
                                 </textElement>
-                                <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+                                <textFieldExpression><![CDATA[$F{tipoPoliza}]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
-                    <jr:column width="155" uuid="6a35055c-20b2-471a-8d13-2a179f5d0162">
+                    <jr:column width="140" uuid="6a35055c-20b2-471a-8d13-2a179f5d0162">
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
                         <jr:columnHeader style="Table_CH" height="30" rowSpan="1">
                             <staticText>
-                                <reportElement x="0" y="0" width="155" height="30" forecolor="#FFFFFF" uuid="3001f191-cfd3-4219-8526-222c0c437ed1"/>
+                                <reportElement x="0" y="0" width="140" height="30" forecolor="#FFFFFF" uuid="3001f191-cfd3-4219-8526-222c0c437ed1"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="SansSerif" size="12" isBold="true"/>
                                 </textElement>
-                                <text><![CDATA[Fecha de Nacimiento]]></text>
+                                <text><![CDATA[Monto Asegurado]]></text>
                             </staticText>
                         </jr:columnHeader>
                         <jr:detailCell style="Table_TD" height="30">
                             <textField isBlankWhenNull="false">
-                                <reportElement x="0" y="0" width="155" height="30" forecolor="#000000" uuid="b62f1f1d-caef-4f07-b3bd-b888f6b749d8"/>
+                                <reportElement x="0" y="0" width="140" height="30" forecolor="#000000" uuid="b62f1f1d-caef-4f07-b3bd-b888f6b749d8"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font size="12"/>
                                 </textElement>
-                                <textFieldExpression><![CDATA[$F{birthday}]]></textFieldExpression>
+                                <textFieldExpression><![CDATA[$F{montoAsegurado}]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
-                    <jr:column width="155" uuid="9f01f2f4-f55a-46b4-be04-fd41c8de553b">
+                    <jr:column width="140" uuid="9f01f2f4-f55a-46b4-be04-fd41c8de553b">
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
                         <jr:columnHeader style="Table_CH" height="30" rowSpan="1">
                             <staticText>
-                                <reportElement x="0" y="0" width="155" height="30" forecolor="#FFFFFF" uuid="3001f191-cfd3-4219-8526-222c0c437ed1"/>
+                                <reportElement x="0" y="0" width="140" height="30" forecolor="#FFFFFF" uuid="3001f191-cfd3-4219-8526-222c0c437ed1"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="SansSerif" size="12" isBold="true"/>
                                 </textElement>
-                                <text><![CDATA[Raza]]></text>
+                                <text><![CDATA[Fecha de Inicio]]></text>
                             </staticText>
                         </jr:columnHeader>
                         <jr:detailCell style="Table_TD" height="30">
                             <textField isBlankWhenNull="false">
-                                <reportElement x="0" y="0" width="155" height="30" forecolor="#000000" uuid="b62f1f1d-caef-4f07-b3bd-b888f6b749d8"/>
+                                <reportElement x="0" y="0" width="140" height="30" forecolor="#000000" uuid="b62f1f1d-caef-4f07-b3bd-b888f6b749d8"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font size="12"/>
                                 </textElement>
-                                <textFieldExpression><![CDATA[$F{breed}]]></textFieldExpression>
+                                <textFieldExpression><![CDATA[$F{fechaInicio}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="140" uuid="9f01f2f4-f55a-46b4-be04-fd41c8de553b">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                        <jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="140" height="30" forecolor="#FFFFFF" uuid="3001f191-cfd3-4219-8526-222c0c437ed1"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font fontName="SansSerif" size="12" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Fecha de Vencimiento]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField isBlankWhenNull="false">
+                                <reportElement x="0" y="0" width="140" height="30" forecolor="#000000" uuid="b62f1f1d-caef-4f07-b3bd-b888f6b749d8"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="12"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{fechaVencimiento}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="140" uuid="9f01f2f4-f55a-46b4-be04-fd41c8de553b">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                        <jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="140" height="30" forecolor="#FFFFFF" uuid="3001f191-cfd3-4219-8526-222c0c437ed1"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font fontName="SansSerif" size="12" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Estado]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField isBlankWhenNull="false">
+                                <reportElement x="0" y="0" width="140" height="30" forecolor="#000000" uuid="b62f1f1d-caef-4f07-b3bd-b888f6b749d8"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="12"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
