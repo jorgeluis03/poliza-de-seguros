@@ -21,11 +21,23 @@ public class ReportController {
     @Autowired
     private PolizaRepository polizaRepository;
 
-    @GetMapping("polizas")
+    @GetMapping("/polizas-pdf")
     public ResponseEntity<byte[]> exportPolizasToPdf() throws JRException, FileNotFoundException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("policesReport", "policesReport.pdf");
         return ResponseEntity.ok().headers(headers).body(employeeReportGenerator.exportPolizasToPdf(polizaRepository.findAll()));
+    }
+
+    @GetMapping("/polizas-xlsx")
+    public ResponseEntity<byte[]> exportPolizasToXls() throws JRException, FileNotFoundException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8");
+        ContentDisposition disposition = ContentDisposition.builder("attachment")
+                .filename("policesReport" + ".xlsx").build();
+        headers.setContentDisposition(disposition);
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(employeeReportGenerator.exportPolizasToXls(polizaRepository.findAll()));
     }
 }

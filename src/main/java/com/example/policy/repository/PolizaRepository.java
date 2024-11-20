@@ -20,13 +20,18 @@ public interface PolizaRepository extends JpaRepository<Poliza, Integer>{
 
 	Page<Poliza> findByUsuario(Usuario usuario, Pageable pageable);
 
-	@Query(nativeQuery = true, value = "SELECT * " +
-			"FROM polizas " +
-			"WHERE (:numPoliza = '' OR numero_poliza = :numPoliza) " +
-			"AND (:tipoPoliza = '' OR tipo_poliza = :tipoPoliza)" +
-			"AND (:idUsuario = '' OR id_usuario = :idUsuario)")
+	@Query("SELECT p " +
+			"FROM Poliza p " +
+			"WHERE (:numPoliza = '' OR p.numeroPoliza = :numPoliza) " +
+			"AND (:tipoPoliza = '' OR p.tipoPoliza = :tipoPoliza) " +
+			"AND (:username = '' OR p.usuario.idUsuario IN " +
+			"(SELECT u.idUsuario FROM Usuario u WHERE u.nombreUsuario LIKE CONCAT('%', :username, '%')))")
 	List<Poliza> searchPoliza(@Param("numPoliza") String numPoliza,
-						  @Param("tipoPoliza") String tipoPoliza,
-						  @Param("idUsuario" ) String idUsuario);
+							   @Param("tipoPoliza") String tipoPoliza,
+							   @Param("username") String username);
+
+
+
+
 
 }

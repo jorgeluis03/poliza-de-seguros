@@ -71,7 +71,7 @@ public class PolizaService {
 		}else {
 			throw new IllegalArgumentException("Tipo de póliza no soportado: "+polizaDTO.getTipoPoliza());
 		}
-		emailService.sendMessageUsingThymeleafTemplate("a20200643@pucp.edu.pe","Solicitud de Poliza SegurAI", poliza);
+		emailService.sendMessageUsingThymeleafTemplate(usuario.getCorreo(),"Solicitud de Poliza SegurAI", poliza);
 		return new ApiResult<>("Póliza solicitada correctamente", new HashMap<String, Object>() {{
 			put("id", poliza.getIdPoliza());
 		}});
@@ -151,17 +151,9 @@ public class PolizaService {
 	}
 
 	@Transactional
-	public List<PolizaDTO> buscarPoliza(String numPoliza, String tipoPoliza, String usuario){
+	public List<PolizaDTO> buscarPoliza(String numPoliza, String tipoPoliza, String username){
 
-		Usuario user = null;
-		if(!usuario.isEmpty()){
-			user= usuarioRepository.findByCorreo(usuario)
-					.orElseThrow(() -> new UsuarioNoEncontradoException("No se encontraron resultados"));
-		}
-
-		String idUser = usuario.isEmpty() ? "" : String.valueOf(user.getIdUsuario());
-
-		List<Poliza> polizas = polizaRepository.searchPoliza(numPoliza, tipoPoliza,idUser);
+		List<Poliza> polizas = polizaRepository.searchPoliza(numPoliza, tipoPoliza,username);
 
 		if (polizas.isEmpty()) {
 			throw new PolizaNoEncontradaException("No se encontraron resultados");

@@ -81,11 +81,11 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1>¡La póliza N° [<span th:text="${numeroPoliza}">#123456</span>] ha sido Emitida!</h1>
+        <h1>¡La póliza N° [<span th:text="${numeroPoliza}">#123456</span>] se encuentra <span th:text="${estado}"></span>!</h1>
     </div>
     <div class="content">
         <p style="line-height: 1.5; font-size: 16px;">
-            Nos complace informarte que tu póliza ha sido emitida con éxito. A continuación, encontrarás los detalles de tu póliza y adjunto están los documentos con toda la información necesaria.
+            Nos complace informarte que tu póliza se encuentra <span th:text="${estado}"></span>. A continuación, encontrarás los detalles de tu póliza con toda la información necesaria.
         </p>
 
         <h2 style="font-size: 16px; margin-top: 20px;">Datos de la póliza</h2>
