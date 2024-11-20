@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -71,20 +72,26 @@ public class SecurityConfiguration {
 
     //Define la cedena de filtros de seguridad. Configura como se gestionn las peticiones HTTP en terminos de seguridad
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Deshabilita CSRF para una API REST
-                .cors(AbstractHttpConfigurer::disable) // Deshabilita CORS (puedes personalizarlo)
-                .authorizeHttpRequests(req -> req
-                        //.requestMatchers("/login", "/register").permitAll() // Permite el acceso sin autenticación
-                        //.requestMatchers("v1/polices/**").hasAnyAuthority("ROLE_CLIENT", "ROLE_ADMIN") // Solo ROLE_USER puede acceder a /usuario
-                        //.requestMatchers("/**").hasAuthority("ROLE_ADMIN") // Solo ROLE_ADMIN puede acceder a /polizas
-                        .anyRequest().permitAll()) // Cualquier otra ruta requiere autenticación
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler)) // Maneja las respuestas no autorizadas
-                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS)) // Sin estado, ya que se utiliza JWT
+                .csrf().disable() // Deshabilita CSRF para una API REST
+                .cors().and() // Habilita CORS
+                .authorizeHttpRequests()
+                .requestMatchers("/login", "/register").permitAll() // Permite el acceso sin autenticación
+                .requestMatchers("/v1/polices/**").hasAnyAuthority("ROLE_CLIENT", "ROLE_ADMIN") // Acceso restringido por roles
+                .anyRequest().hasAuthority("ROLE_ADMIN") // Otras rutas requieren ROLE_ADMIN
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthorizedHandler) // Manejo de respuestas no autorizadas
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Sin estado
+                .and()
                 .authenticationProvider(authenticationProvider()) // Proveedor de autenticación personalizado
-                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class); // Añade el filtro JWT antes de UsernamePasswordAuthentication
+                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class); // Filtro JWT
 
         return http.build();
     }
+
+
 }

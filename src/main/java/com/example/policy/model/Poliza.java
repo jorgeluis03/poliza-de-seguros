@@ -50,4 +50,7 @@ public class Poliza implements Serializable {
 	@OneToOne(mappedBy = "poliza", cascade = CascadeType.ALL, orphanRemoval = true)
 	private PolizaInmueble polizaInmueble;
 
+	public String getCorreoUsuario() {
+		return usuario != null ? usuario.getCorreo() : null;
+	}
 }
